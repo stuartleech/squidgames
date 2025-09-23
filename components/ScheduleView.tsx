@@ -95,18 +95,18 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                 {/* Team names and scores in the center */}
                 <div className="flex-1">
-                  <div className="grid grid-cols-3 items-center gap-0 sm:gap-1 text-center">
+                  <div className="flex items-center justify-center text-center">
                     {/* Home Team */}
-                    <div className="col-span-1 flex items-center justify-end space-x-1 sm:space-x-2">
+                    <div className="flex items-center justify-end" style={{ marginRight: '15px' }}>
                       <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.homeTeamName}</span>
                       <div 
-                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
+                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0 ml-1 sm:ml-2"
                         style={{ backgroundColor: game.homeTeamColor }}
                       ></div>
                     </div>
                     
                     {/* Scores together in center */}
-                    <div className="col-span-1 flex items-center justify-center space-x-1 sm:space-x-2">
+                    <div className="flex items-center justify-center space-x-1 sm:space-x-2">
                       <div className="text-xl sm:text-3xl font-bold text-gray-900">
                         {game.homeScore !== null ? game.homeScore : '-'}
                       </div>
@@ -117,9 +117,9 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                     </div>
                     
                     {/* Away Team */}
-                    <div className="col-span-1 flex items-center justify-start space-x-1 sm:space-x-2">
+                    <div className="flex items-center justify-start" style={{ marginLeft: '15px' }}>
                       <div 
-                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
+                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0 mr-1 sm:mr-2"
                         style={{ backgroundColor: game.awayTeamColor }}
                       ></div>
                       <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.awayTeamName}</span>
