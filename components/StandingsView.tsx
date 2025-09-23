@@ -121,13 +121,19 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
                         style={{ backgroundColor: team.color }}
                       ></div>
                       {team.logo && (
-                        <Image
-                          src={team.logo}
-                          alt={team.name}
-                          width={24}
-                          height={24}
-                          className="rounded-full mr-3 flex-shrink-0"
-                        />
+                        <div className="relative mr-3 flex-shrink-0">
+                          <Image
+                            src={team.logo}
+                            alt={team.name}
+                            width={24}
+                            height={24}
+                            className="rounded-full"
+                            onError={(e) => {
+                              // Hide the image if it fails to load
+                              (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                          />
+                        </div>
                       )}
                       <div className="text-sm font-medium text-gray-900">
                         {team.name}

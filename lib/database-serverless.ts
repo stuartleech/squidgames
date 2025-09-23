@@ -14,13 +14,13 @@ class InMemoryDatabase {
   private initializeSampleData() {
     // Only initialize if empty (to avoid duplicates on multiple calls)
     if (this.teams.length === 0) {
-      // Sample teams data for Squid Games 2025
-      const sampleTeams = [
-        { name: 'Margate Krakens', color: '#d80e61', logo: 'https://margatekrakens.co.uk/assets/images/image01.svg?v=d59198d8' },
-        { name: 'Kent Exiles A', color: '#000000', logo: 'https://kentexiles.co.uk/wp-content/uploads/2018/09/logo.png' },
-        { name: 'Kent Exiles B', color: '#c0c0c0', logo: 'https://kentexiles.co.uk/wp-content/uploads/2018/09/logo.png' },
-        { name: 'Solent Red Storm', color: '#dc2626', logo: 'https://scontent-lhr6-1.xx.fbcdn.net/v/t39.30808-6/532341340_1281337937116256_8412780468816691789_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=IZySkafIo-QQ7kNvwGWXyIg&_nc_oc=AdnTSj0uzkCufL8rD5RqF8_lcG4G-BsZ1vvxzZ0fHZLKRX0ADO5jFuzFR47ciDkUrmU&_nc_zt=23&_nc_ht=scontent-lhr6-1.xx&_nc_gid=CesSjxpYIcbGvHPHzsLUyA&oh=00_Afaav8rbwb1PguYSrltBKgLLdVKSGhgyEN9Bnc7-KNsvGA&oe=68D8ED14' },
-      ];
+          // Sample teams data for Squid Games 2025
+          const sampleTeams = [
+            { name: 'Margate Krakens', color: '#d80e61' },
+            { name: 'Kent Exiles A', color: '#000000' },
+            { name: 'Kent Exiles B', color: '#c0c0c0' },
+            { name: 'Solent Red Storm', color: '#dc2626' },
+          ];
 
       // Create sample teams
       sampleTeams.forEach(team => {
@@ -30,8 +30,7 @@ class InMemoryDatabase {
           wins: 0,
           losses: 0,
           pointsFor: 0,
-          pointsAgainst: 0,
-          logo: team.logo
+          pointsAgainst: 0
         });
       });
 

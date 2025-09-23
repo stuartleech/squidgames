@@ -8,22 +8,41 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'schedule' | 'standings'>('schedule');
   const [games, setGames] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
+      setHasError(false);
+      
       try {
         const [gamesResponse, teamsResponse] = await Promise.all([
           fetch('/api/games'),
           fetch('/api/teams')
         ]);
         
-        const gamesData = await gamesResponse.json();
-        const teamsData = await teamsResponse.json();
-        
-        setGames(gamesData);
-        setTeams(teamsData);
+        if (gamesResponse.ok && teamsResponse.ok) {
+          const gamesData = await gamesResponse.json();
+          const teamsData = await teamsResponse.json();
+          
+          setGames(gamesData);
+          setTeams(teamsData);
+        } else {
+          console.error('Failed to fetch data:', gamesResponse.status, teamsResponse.status);
+          setHasError(true);
+          // Set empty arrays as fallback
+          setGames([]);
+          setTeams([]);
+        }
       } catch (error) {
         console.error('Failed to fetch data:', error);
+        setHasError(true);
+        // Set empty arrays as fallback
+        setGames([]);
+        setTeams([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -79,8 +98,30 @@ export default function Home() {
         </div>
         
         {/* Tab Content */}
-        {activeTab === 'schedule' && <ScheduleView games={games} />}
-        {activeTab === 'standings' && <StandingsView teams={teams} />}
+        {isLoading ? (
+          <div className="text-center py-12">
+            <div className="text-white/80 text-lg">
+              Loading tournament data...
+            </div>
+          </div>
+        ) : hasError ? (
+          <div className="text-center py-12">
+            <div className="text-white/80 text-lg mb-4">
+              Failed to load tournament data. Please refresh the page.
+            </div>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-white/20 text-white px-4 py-2 rounded-md hover:bg-white/30 transition-colors"
+            >
+              Refresh Page
+            </button>
+          </div>
+        ) : (
+          <>
+            {activeTab === 'schedule' && <ScheduleView games={games} />}
+            {activeTab === 'standings' && <StandingsView teams={teams} />}
+          </>
+        )}
       </div>
     </main>
   );
