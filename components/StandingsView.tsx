@@ -69,34 +69,34 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[600px]">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Rank
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Team
                 </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   GP
                 </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   W
                 </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   L
                 </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Pts
                 </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   PF
                 </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   PA
                 </th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Diff
                 </th>
               </tr>
@@ -104,68 +104,38 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
             <tbody className="bg-white divide-y divide-gray-200">
               {standings.map((team, index) => (
                 <tr key={team.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <div className="flex items-center">
-                      <span className="text-lg font-bold text-krakens-pink">
-                        {index + 1}
-                      </span>
-                      {index === 0 && (
-                        <span className="ml-2 text-yellow-500">🏆</span>
-                      )}
-                    </div>
+                  <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900 text-center">
+                    {index === 0 ? '🏆' : index + 1}
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
+                  <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                     <div className="flex items-center">
                       <div 
-                        className="w-4 h-4 rounded-full mr-3 flex-shrink-0" 
+                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full mr-2 sm:mr-3 flex-shrink-0" 
                         style={{ backgroundColor: team.color }}
                       ></div>
-                      {team.logo && (
-                        <div className="relative mr-3 flex-shrink-0">
-                          <Image
-                            src={team.logo}
-                            alt={team.name}
-                            width={24}
-                            height={24}
-                            className="rounded-full"
-                            onError={(e) => {
-                              // Hide the image if it fails to load
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
-                        </div>
-                      )}
-                      <div className="text-sm font-medium text-gray-900">
-                        {team.name}
-                      </div>
+                      <span className="truncate">{team.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 text-center">
                     {team.gamesPlayed}
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                    <span className="text-green-600 font-semibold">
-                      {team.wins}
-                    </span>
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-green-600 font-medium text-center">
+                    {team.wins}
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                    <span className="text-red-600 font-semibold">
-                      {team.losses}
-                    </span>
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-red-600 font-medium text-center">
+                    {team.losses}
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                    <span className="text-krakens-pink font-bold text-lg">
-                      {team.points}
-                    </span>
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-bold text-krakens-pink text-center">
+                    {team.points}
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-center">
                     {team.pointsFor}
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-center">
                     {team.pointsAgainst}
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-sm text-center">
-                    <span className={`font-semibold ${
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-center">
+                    <span className={`font-medium ${
                       team.pointDifferential > 0 ? 'text-green-600' : 
                       team.pointDifferential < 0 ? 'text-red-600' : 
                       'text-gray-600'

@@ -82,8 +82,8 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
         
         <div className="divide-y divide-gray-200">
           {sortedGames.map((game) => (
-            <div key={game.id} className="p-4 hover:bg-gray-50 transition-colors">
-              <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6">
+            <div key={game.id} className="p-3 sm:p-4 hover:bg-gray-50 transition-colors">
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6">
                 {/* Status on the left */}
                 <div className="flex justify-center sm:justify-start sm:flex-shrink-0">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(game.status)}`}>
@@ -95,29 +95,29 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                 {/* Team names and scores in the center */}
                 <div className="flex-1 text-center">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center space-y-2 sm:space-y-0 sm:space-x-6">
-                    <div className="flex items-center justify-center space-x-2">
+                  <div className="flex items-center justify-center space-x-2 sm:space-x-6">
+                    <div className="flex items-center space-x-1 sm:space-x-2">
                       <div 
-                        className="w-4 h-4 rounded-full"
+                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.homeTeamColor }}
                       ></div>
-                      <span className="font-semibold text-lg">{game.homeTeamName}</span>
+                      <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.homeTeamName}</span>
                     </div>
                     
-                    <div className="flex items-center justify-center space-x-3">
-                      <div className="text-3xl font-bold text-gray-900">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <div className="text-xl sm:text-3xl font-bold text-gray-900">
                         {game.homeScore !== null ? game.homeScore : '-'}
                       </div>
-                      <span className="text-gray-500 font-medium text-lg">vs</span>
-                      <div className="text-3xl font-bold text-gray-900">
+                      <span className="text-gray-500 font-medium text-sm sm:text-lg">vs</span>
+                      <div className="text-xl sm:text-3xl font-bold text-gray-900">
                         {game.awayScore !== null ? game.awayScore : '-'}
                       </div>
                     </div>
                     
-                    <div className="flex items-center justify-center space-x-2">
-                      <span className="font-semibold text-lg">{game.awayTeamName}</span>
+                    <div className="flex items-center space-x-1 sm:space-x-2">
+                      <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.awayTeamName}</span>
                       <div 
-                        className="w-4 h-4 rounded-full"
+                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.awayTeamColor }}
                       ></div>
                     </div>
