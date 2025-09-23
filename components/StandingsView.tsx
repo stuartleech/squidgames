@@ -60,7 +60,7 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
   const standings = calculateStandings();
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="bg-krakens-pink text-white px-6 py-3">
           <h2 className="text-xl font-bold text-center">
@@ -79,16 +79,13 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
                   Team
                 </th>
                 <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  GP
+                  P
                 </th>
                 <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   W
                 </th>
                 <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   L
-                </th>
-                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Pts
                 </th>
                 <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   PF
@@ -99,15 +96,18 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
                 <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Diff
                 </th>
+                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  PTS
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {standings.map((team, index) => (
                 <tr key={team.id} className="hover:bg-gray-50">
-                  <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900 text-center">
+                  <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-medium text-gray-900 text-center">
                     {index === 0 ? '🏆' : index + 1}
                   </td>
-                  <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                  <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-medium text-gray-900">
                     <div className="flex items-center">
                       <div 
                         className="w-3 h-3 sm:w-4 sm:h-4 rounded-full mr-2 sm:mr-3 flex-shrink-0" 
@@ -116,25 +116,22 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
                       <span className="truncate">{team.name}</span>
                     </div>
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-500 text-center">
                     {team.gamesPlayed}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-green-600 font-medium text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-green-600 font-medium text-center">
                     {team.wins}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-red-600 font-medium text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-red-600 font-medium text-center">
                     {team.losses}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-bold text-krakens-pink text-center">
-                    {team.points}
-                  </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-900 text-center">
                     {team.pointsFor}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-900 text-center">
                     {team.pointsAgainst}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-center">
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-center">
                     <span className={`font-medium ${
                       team.pointDifferential > 0 ? 'text-green-600' : 
                       team.pointDifferential < 0 ? 'text-red-600' : 
@@ -142,6 +139,9 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
                     }`}>
                       {team.pointDifferential > 0 ? '+' : ''}{team.pointDifferential}
                     </span>
+                  </td>
+                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-bold text-krakens-pink text-center">
+                    {team.points}
                   </td>
                 </tr>
               ))}
@@ -156,21 +156,6 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
             </div>
           </div>
         )}
-      </div>
-
-      {/* Legend */}
-      <div className="mt-4 bg-gray-50 rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-gray-700 mb-2">Legend:</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-gray-600">
-          <div><strong>GP:</strong> Games Played</div>
-          <div><strong>W:</strong> Wins</div>
-          <div><strong>L:</strong> Losses</div>
-          <div><strong>Pts:</strong> Points (2 per win)</div>
-          <div><strong>PF:</strong> Points For</div>
-          <div><strong>PA:</strong> Points Against</div>
-          <div><strong>Diff:</strong> Point Differential</div>
-          <div><strong>🏆:</strong> Tournament Leader</div>
-        </div>
       </div>
     </div>
   );
