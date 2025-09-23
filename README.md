@@ -136,6 +136,26 @@ The app features a professional timer system:
 - **ESLint**: Code quality checks
 - **Tailwind**: Utility-first CSS
 
+## 🚀 Deployment
+
+### Netlify Deployment
+1. **Connect Repository**: Link your GitHub repo to Netlify
+2. **Build Settings**: 
+   - Build Command: `npm run build`
+   - Publish Directory: `.next`
+3. **Environment Variables**: None required
+4. **Deploy**: Netlify will automatically detect Next.js and deploy
+
+### Vercel Deployment
+1. **Connect Repository**: Import your GitHub repo to Vercel
+2. **Framework Preset**: Next.js (auto-detected)
+3. **Deploy**: Vercel will automatically build and deploy
+
+### Important Notes
+- **Serverless Compatible**: App automatically uses in-memory database on serverless platforms
+- **Local Development**: Uses SQLite database for local development
+- **Data Persistence**: Serverless deployments reset data on each deployment (suitable for tournaments)
+
 ## 📄 License
 
 Built for Margate Krakens Flag Football Club - Squid Games 2025 Tournament
