@@ -95,31 +95,41 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                 {/* Team names and scores in the center */}
                 <div className="flex-1">
-                  <div className="flex items-center justify-center space-x-2 sm:space-x-4">
-                    {/* Home Team with Score */}
-                    <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="grid grid-cols-5 items-center gap-1 sm:gap-2">
+                    {/* Home Team Name */}
+                    <div className="col-span-1 text-right pr-1 sm:pr-2">
                       <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.homeTeamName}</span>
+                    </div>
+                    
+                    {/* Home Team Circle */}
+                    <div className="col-span-1 flex justify-center">
                       <div 
                         className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.homeTeamColor }}
                       ></div>
+                    </div>
+                    
+                    {/* Scores */}
+                    <div className="col-span-1 flex items-center justify-center space-x-1">
                       <div className="text-xl sm:text-3xl font-bold text-gray-900">
                         {game.homeScore !== null ? game.homeScore : '-'}
                       </div>
-                    </div>
-                    
-                    {/* Separator */}
-                    <span className="text-gray-500 font-medium text-sm sm:text-lg">-</span>
-                    
-                    {/* Away Team with Score */}
-                    <div className="flex items-center space-x-1 sm:space-x-2">
+                      <span className="text-gray-500 font-medium text-sm sm:text-lg">-</span>
                       <div className="text-xl sm:text-3xl font-bold text-gray-900">
                         {game.awayScore !== null ? game.awayScore : '-'}
                       </div>
+                    </div>
+                    
+                    {/* Away Team Circle */}
+                    <div className="col-span-1 flex justify-center">
                       <div 
                         className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.awayTeamColor }}
                       ></div>
+                    </div>
+                    
+                    {/* Away Team Name */}
+                    <div className="col-span-1 text-left pl-1 sm:pl-2">
                       <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.awayTeamName}</span>
                     </div>
                   </div>
