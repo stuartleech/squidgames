@@ -55,7 +55,7 @@ class GameTimer {
   // Initialize timers for any games that should be running
   initializeTimers() {
     const games = dbOperations.getAllGames();
-    games.forEach(game => {
+    games.forEach((game: any) => {
       if (game.status === 'in-progress' && game.isTimerRunning === 1 && game.timeRemaining > 0) {
         this.startTimer(game.id);
       }

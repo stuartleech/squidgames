@@ -6,6 +6,7 @@ export interface Team {
   losses: number;
   pointsFor: number;
   pointsAgainst: number;
+  logo?: string;
 }
 
 export interface Game {
@@ -19,8 +20,17 @@ export interface Game {
   scheduledTime: string;
   field: string;
   status: 'scheduled' | 'in-progress' | 'completed';
-  quarter: number;
-  timeRemaining: string;
+  half: number;
+  timeRemaining: number;
+  isTimerRunning: boolean;
+  referee?: string;
+  // Extended fields for API responses
+  homeTeamName?: string;
+  homeTeamColor?: string;
+  homeTeamLogo?: string;
+  awayTeamName?: string;
+  awayTeamColor?: string;
+  awayTeamLogo?: string;
 }
 
 export interface Tournament {
