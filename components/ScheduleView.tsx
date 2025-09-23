@@ -95,9 +95,9 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                 {/* Team names and scores in the center */}
                 <div className="flex-1">
-                  <div className="grid grid-cols-3 items-center gap-0 sm:gap-1">
+                  <div className="grid grid-cols-3 items-center gap-0">
                     {/* Home Team Name + Circle */}
-                    <div className="col-span-1 flex items-center justify-end space-x-1">
+                    <div className="col-span-1 flex items-center justify-end space-x-0.5">
                       <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.homeTeamName}</span>
                       <div 
                         className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
@@ -117,7 +117,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                     </div>
                     
                     {/* Away Team Circle + Name */}
-                    <div className="col-span-1 flex items-center justify-start space-x-1">
+                    <div className="col-span-1 flex items-center justify-start space-x-0.5">
                       <div 
                         className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.awayTeamColor }}
