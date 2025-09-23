@@ -2,6 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbOperations } from '@/lib/database';
 import { gameTimer } from '@/lib/timer';
 
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const gameId = parseInt(params.id);
+
+    if (!gameId) {
+      return NextResponse.json({ error: 'Game ID is required' }, { status: 400 });
+    }
+
+    // Delete the game
+    const result = dbOperations.deleteGame(gameId);
+    
+    if (result.changes === 0) {
+      return NextResponse.json({ error: 'Game not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Game deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting game:', error);
+    return NextResponse.json({ error: 'Failed to delete game' }, { status: 500 });
+  }
+}
+
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { homeScore, awayScore, status, half, timeRemaining, isTimerRunning } = await request.json();

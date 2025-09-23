@@ -157,6 +157,15 @@ class InMemoryDatabase {
     return { changes: 0 };
   }
 
+  deleteTeam(id: number): { changes: number } {
+    const index = this.teams.findIndex(team => team.id === id);
+    if (index !== -1) {
+      this.teams.splice(index, 1);
+      return { changes: 1 };
+    }
+    return { changes: 0 };
+  }
+
   // Games
   createGame(game: Omit<Game, 'id'>): { changes: number; lastInsertRowid: number } {
     const newGame = { ...game, id: this.nextId++ };
@@ -188,6 +197,15 @@ class InMemoryDatabase {
     const index = this.games.findIndex(game => game.id === id);
     if (index !== -1) {
       this.games[index] = { ...this.games[index], ...updates };
+      return { changes: 1 };
+    }
+    return { changes: 0 };
+  }
+
+  deleteGame(id: number): { changes: number } {
+    const index = this.games.findIndex(game => game.id === id);
+    if (index !== -1) {
+      this.games.splice(index, 1);
       return { changes: 1 };
     }
     return { changes: 0 };

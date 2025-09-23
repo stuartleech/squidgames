@@ -88,6 +88,10 @@ if (isServerless) {
         const stmt = db.prepare(`UPDATE teams SET ${setClause} WHERE id = ?`);
         return stmt.run(...values, id);
       },
+      deleteTeam: (id: number) => {
+        const stmt = db.prepare('DELETE FROM teams WHERE id = ?');
+        return stmt.run(id);
+      },
 
       // Games
       createGame: (game: Omit<Game, 'id'>) => {
@@ -136,18 +140,22 @@ if (isServerless) {
         return stmt.get(id);
       },
 
-      updateGame: (id: number, game: Partial<Game>) => {
-        const fields = Object.keys(game).filter(key => key !== 'id');
-        const values = fields.map(field => {
-          if (field === 'isTimerRunning') {
-            return (game as any)[field] ? 1 : 0; // Convert boolean to 0 or 1
-          }
-          return (game as any)[field];
-        });
-        const setClause = fields.map(field => `${field} = ?`).join(', ');
-        const stmt = db.prepare(`UPDATE games SET ${setClause} WHERE id = ?`);
-        return stmt.run(...values, id);
-      },
+        updateGame: (id: number, game: Partial<Game>) => {
+          const fields = Object.keys(game).filter(key => key !== 'id');
+          const values = fields.map(field => {
+            if (field === 'isTimerRunning') {
+              return (game as any)[field] ? 1 : 0; // Convert boolean to 0 or 1
+            }
+            return (game as any)[field];
+          });
+          const setClause = fields.map(field => `${field} = ?`).join(', ');
+          const stmt = db.prepare(`UPDATE games SET ${setClause} WHERE id = ?`);
+          return stmt.run(...values, id);
+        },
+        deleteGame: (id: number) => {
+          const stmt = db.prepare('DELETE FROM games WHERE id = ?');
+          return stmt.run(id);
+        },
 
       // Tournaments
       createTournament: (tournament: Omit<Tournament, 'id'>) => {

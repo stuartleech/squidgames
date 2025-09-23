@@ -19,6 +19,12 @@ export default function AdminPanel() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showTeamManagement, setShowTeamManagement] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<any>(null);
+  const [teamName, setTeamName] = useState('');
+  const [teamColor, setTeamColor] = useState('#000000');
+  const [teamLogo, setTeamLogo] = useState('');
+  const [isDeletingGame, setIsDeletingGame] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -127,6 +133,99 @@ export default function AdminPanel() {
       alert('Error creating game');
     } finally {
       setIsCreating(false);
+    }
+  };
+
+  const handleDeleteGame = async () => {
+    if (!selectedGame || !selectedGame.id) return;
+
+    if (!confirm(`Are you sure you want to delete the game between ${selectedGame.homeTeamName} and ${selectedGame.awayTeamName}?`)) {
+      return;
+    }
+
+    setIsDeletingGame(true);
+    try {
+      const response = await fetch(`/api/games/${selectedGame.id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        await fetchGames();
+        alert('Game deleted successfully!');
+        setSelectedGame(null);
+        setShowCreateForm(false);
+      } else {
+        alert('Failed to delete game');
+      }
+    } catch (error) {
+      console.error('Error deleting game:', error);
+      alert('Error deleting game');
+    } finally {
+      setIsDeletingGame(false);
+    }
+  };
+
+  const handleCreateTeam = async () => {
+    if (!teamName.trim()) {
+      alert('Team name is required');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/teams', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: teamName,
+          color: teamColor,
+          logo: teamLogo,
+          wins: 0,
+          losses: 0,
+          pointsFor: 0,
+          pointsAgainst: 0,
+        }),
+      });
+
+      if (response.ok) {
+        await fetchTeams();
+        alert('Team created successfully!');
+        setTeamName('');
+        setTeamColor('#000000');
+        setTeamLogo('');
+      } else {
+        alert('Failed to create team');
+      }
+    } catch (error) {
+      console.error('Error creating team:', error);
+      alert('Error creating team');
+    }
+  };
+
+  const handleDeleteTeam = async (teamId: number) => {
+    const team = teams.find(t => t.id === teamId);
+    if (!team) return;
+
+    if (!confirm(`Are you sure you want to delete ${team.name}? This will also delete all games involving this team.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/teams/${teamId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        await fetchTeams();
+        await fetchGames(); // Refresh games in case any were deleted
+        alert('Team deleted successfully!');
+      } else {
+        alert('Failed to delete team');
+      }
+    } catch (error) {
+      console.error('Error deleting team:', error);
+      alert('Error deleting team');
     }
   };
 
@@ -277,21 +376,29 @@ export default function AdminPanel() {
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold">Select Game</h2>
-                  <button
-                    onClick={() => {
-                      setShowCreateForm(true);
-                      setSelectedGame({
-                        homeTeamId: 1,
-                        awayTeamId: 2,
-                        scheduledTime: new Date().toISOString(),
-                        field: '1',
-                        referee: ''
-                      });
-                    }}
-                    className="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
-                  >
-                    + New Game
-                  </button>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => setShowTeamManagement(!showTeamManagement)}
+                      className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                      {showTeamManagement ? 'Hide Teams' : 'Manage Teams'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowCreateForm(true);
+                        setSelectedGame({
+                          homeTeamId: 1,
+                          awayTeamId: 2,
+                          scheduledTime: new Date().toISOString(),
+                          field: '1',
+                          referee: ''
+                        });
+                      }}
+                      className="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                    >
+                      + New Game
+                    </button>
+                  </div>
                 </div>
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {games.map((game) => (
@@ -325,6 +432,70 @@ export default function AdminPanel() {
                     </div>
                   ))}
                 </div>
+
+                {/* Team Management Section */}
+                {showTeamManagement && (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-4">Team Management</h3>
+                    
+                    {/* Create New Team */}
+                    <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                      <h4 className="font-medium mb-3">Add New Team</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input
+                          type="text"
+                          placeholder="Team Name"
+                          value={teamName}
+                          onChange={(e) => setTeamName(e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        />
+                        <input
+                          type="color"
+                          value={teamColor}
+                          onChange={(e) => setTeamColor(e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        />
+                        <input
+                          type="url"
+                          placeholder="Logo URL"
+                          value={teamLogo}
+                          onChange={(e) => setTeamLogo(e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        />
+                      </div>
+                      <button
+                        onClick={handleCreateTeam}
+                        className="mt-3 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                      >
+                        Add Team
+                      </button>
+                    </div>
+
+                    {/* Teams List */}
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {teams.map((team) => (
+                        <div key={team.id} className="flex items-center justify-between p-3 bg-white border rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <div 
+                              className="w-4 h-4 rounded-full" 
+                              style={{ backgroundColor: team.color }}
+                            ></div>
+                            <span className="font-medium">{team.name}</span>
+                            <span className="text-sm text-gray-500">
+                              ({team.wins}W - {team.losses}L)
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteTeam(team.id)}
+                            className="text-red-600 hover:text-red-800 px-2 py-1 rounded text-sm"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Game Update/Create Form */}
@@ -514,13 +685,22 @@ export default function AdminPanel() {
                         </div>
                       </div>
 
-                      <button
-                        onClick={handleUpdateGame}
-                        disabled={isUpdating}
-                        className="w-full bg-krakens-pink text-white py-2 px-4 rounded-md hover:bg-krakens-pink/90 focus:outline-none focus:ring-2 focus:ring-krakens-pink disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isUpdating ? 'Updating...' : 'Update Game'}
-                      </button>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={handleUpdateGame}
+                          disabled={isUpdating}
+                          className="flex-1 bg-krakens-pink text-white py-2 px-4 rounded-md hover:bg-krakens-pink/90 focus:outline-none focus:ring-2 focus:ring-krakens-pink disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isUpdating ? 'Updating...' : 'Update Game'}
+                        </button>
+                        <button
+                          onClick={handleDeleteGame}
+                          disabled={isDeletingGame}
+                          className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isDeletingGame ? 'Deleting...' : 'Delete'}
+                        </button>
+                      </div>
 
                       {status === 'scheduled' && (
                         <button
