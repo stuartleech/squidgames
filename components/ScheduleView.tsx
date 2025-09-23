@@ -83,9 +83,9 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
         <div className="divide-y divide-gray-200">
           {sortedGames.map((game) => (
             <div key={game.id} className="p-3 sm:p-4 hover:bg-gray-50 transition-colors min-h-[80px] sm:min-h-[100px]">
-              <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-6 h-full">
-                {/* Status on the left */}
-                <div className="flex justify-center sm:justify-start sm:flex-shrink-0">
+              <div className="flex items-center h-full">
+                {/* Status on the left - fixed width */}
+                <div className="w-16 sm:w-20 flex justify-center sm:justify-start">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(game.status)}`}>
                     {game.status === 'in-progress' ? 'LIVE' : 
                      game.status === 'completed' ? 'FINAL' : 
@@ -95,7 +95,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                 {/* Team names and scores in the center */}
                 <div className="flex-1">
-                  <div className="grid grid-cols-5 items-center gap-2 sm:gap-4 text-center">
+                  <div className="grid grid-cols-3 items-center gap-2 sm:gap-4 text-center">
                     {/* Home Team */}
                     <div className="col-span-1 flex items-center justify-end space-x-1 sm:space-x-2">
                       <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.homeTeamName}</span>
@@ -105,20 +105,12 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                       ></div>
                     </div>
                     
-                    {/* Home Score */}
-                    <div className="col-span-1 flex justify-center">
+                    {/* Scores together in center */}
+                    <div className="col-span-1 flex items-center justify-center space-x-1 sm:space-x-2">
                       <div className="text-xl sm:text-3xl font-bold text-gray-900">
                         {game.homeScore !== null ? game.homeScore : '-'}
                       </div>
-                    </div>
-                    
-                    {/* VS */}
-                    <div className="col-span-1 flex justify-center">
-                      <span className="text-gray-500 font-medium text-sm sm:text-lg">vs</span>
-                    </div>
-                    
-                    {/* Away Score */}
-                    <div className="col-span-1 flex justify-center">
+                      <span className="text-gray-500 font-medium text-sm sm:text-lg">-</span>
                       <div className="text-xl sm:text-3xl font-bold text-gray-900">
                         {game.awayScore !== null ? game.awayScore : '-'}
                       </div>
