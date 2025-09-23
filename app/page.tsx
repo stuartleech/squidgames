@@ -1,9 +1,34 @@
-import { dbOperations } from '@/lib/database';
-import { Game } from '@/types';
-import ScheduleView from '@/components/ScheduleView';
+'use client';
 
-export default async function Home() {
-  const games = dbOperations.getAllGames();
+import { useState, useEffect } from 'react';
+import ScheduleView from '@/components/ScheduleView';
+import StandingsView from '@/components/StandingsView';
+
+export default function Home() {
+  const [activeTab, setActiveTab] = useState<'schedule' | 'standings'>('schedule');
+  const [games, setGames] = useState<any[]>([]);
+  const [teams, setTeams] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [gamesResponse, teamsResponse] = await Promise.all([
+          fetch('/api/games'),
+          fetch('/api/teams')
+        ]);
+        
+        const gamesData = await gamesResponse.json();
+        const teamsData = await teamsResponse.json();
+        
+        setGames(gamesData);
+        setTeams(teamsData);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-krakens-yellow to-krakens-pink">
@@ -26,8 +51,36 @@ export default async function Home() {
             </div>
           </div>
         </div>
+
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-1">
+            <button
+              onClick={() => setActiveTab('schedule')}
+              className={`px-6 py-2 rounded-md font-medium transition-all ${
+                activeTab === 'schedule'
+                  ? 'bg-white text-krakens-pink shadow-lg'
+                  : 'text-white hover:bg-white/10'
+              }`}
+            >
+              📅 Schedule
+            </button>
+            <button
+              onClick={() => setActiveTab('standings')}
+              className={`px-6 py-2 rounded-md font-medium transition-all ${
+                activeTab === 'standings'
+                  ? 'bg-white text-krakens-pink shadow-lg'
+                  : 'text-white hover:bg-white/10'
+              }`}
+            >
+              🏆 Standings
+            </button>
+          </div>
+        </div>
         
-        <ScheduleView games={games} />
+        {/* Tab Content */}
+        {activeTab === 'schedule' && <ScheduleView games={games} />}
+        {activeTab === 'standings' && <StandingsView teams={teams} />}
       </div>
     </main>
   );
