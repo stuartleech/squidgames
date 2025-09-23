@@ -95,14 +95,10 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                 {/* Team names and scores in the center */}
                 <div className="flex-1">
-                  <div className="grid grid-cols-5 items-center gap-1 sm:gap-2">
-                    {/* Home Team Name */}
-                    <div className="col-span-1 text-right pr-1 sm:pr-2">
+                  <div className="grid grid-cols-3 items-center gap-2 sm:gap-4">
+                    {/* Home Team Name + Circle */}
+                    <div className="col-span-1 flex items-center justify-end space-x-1">
                       <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.homeTeamName}</span>
-                    </div>
-                    
-                    {/* Home Team Circle */}
-                    <div className="col-span-1 flex justify-center">
                       <div 
                         className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.homeTeamColor }}
@@ -120,16 +116,12 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                       </div>
                     </div>
                     
-                    {/* Away Team Circle */}
-                    <div className="col-span-1 flex justify-center">
+                    {/* Away Team Circle + Name */}
+                    <div className="col-span-1 flex items-center justify-start space-x-1">
                       <div 
                         className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.awayTeamColor }}
                       ></div>
-                    </div>
-                    
-                    {/* Away Team Name */}
-                    <div className="col-span-1 text-left pl-1 sm:pl-2">
                       <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.awayTeamName}</span>
                     </div>
                   </div>
