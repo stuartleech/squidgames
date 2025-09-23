@@ -1,160 +1,141 @@
-# 🏈 Flag Football Tournament Manager
+# Squid Games 2025 - Flag Football Tournament Manager
 
-A modern web application for managing American Flag Football tournaments with live score updates and real-time schedule management.
+A professional Next.js application for managing the Margate Krakens Flag Football Tournament with live score updates and real-time timer system.
 
-## Features
+## 🏈 Features
 
-- **Live Schedule View**: Public-facing schedule showing all games with real-time score updates
-- **Admin Panel**: Secure interface for updating game scores, status, and live game information
-- **Real-time Updates**: Automatic polling every 5 seconds to keep scores current
-- **Team Management**: Track team statistics including wins, losses, and points
-- **Modern UI**: Beautiful, responsive design with sports-themed styling
-- **Game Status Tracking**: Monitor games from scheduled to in-progress to completed
+- **Live Tournament Schedule**: Real-time display of all games with team logos
+- **Admin Panel**: Complete score management and game control
+- **Real-Time Timer**: 15-minute countdown timers for each half with start/stop controls
+- **Live Updates**: Public view updates every 500ms during active games
+- **Team Management**: Full team roster with statistics
+- **Mobile Responsive**: Optimized for all device sizes
 
-## Tech Stack
+## 🚀 Quick Start
 
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes
+1. **Install Dependencies**:
+```bash
+npm install
+```
+
+2. **Initialize Database**:
+```bash
+curl http://localhost:3000/api/init-data
+curl http://localhost:3000/api/init-timers
+```
+
+3. **Start Development Server**:
+```bash
+npm run dev
+```
+
+4. **Access the Application**:
+   - **Public View**: [http://localhost:3000](http://localhost:3000)
+   - **Admin Panel**: [http://localhost:3000/admin](http://localhost:3000/admin)
+
+## 🎯 Tournament Details
+
+- **Tournament**: Squid Games 2025
+- **Date**: Saturday, October 11th, 2025
+- **Host**: Margate Krakens
+- **Teams**: 
+  - Margate Krakens
+  - Kent Exiles A
+  - Kent Exiles B
+  - Solent Red Storm
+- **Format**: Single pitch, 6 games, 15-minute halves
+
+## ⚡ Timer System
+
+The app features a professional timer system:
+- **Server-Side Timers**: Run independently on the server
+- **Real-Time Updates**: Frontend polls every 500ms during active games
+- **Visual Feedback**: 
+  - 🟢 Green + Pulsing = Timer Running
+  - 🔴 Red = Timer Stopped/Finished
+- **Auto-Stop**: Timers automatically stop at 0:00
+
+## 🎨 Branding
+
+- **Colors**: Margate Krakens Yellow (#f9c413) and Pink (#d80e61)
+- **Font**: Orbitron for tournament title
+- **Logo**: Margate Krakens transparent logo
+
+## 📱 Admin Panel Features
+
+- **Game Selection**: Choose any game to manage
+- **Score Updates**: Real-time score input
+- **Timer Controls**: Start/Stop/Reset 15-minute timers
+- **Half Management**: Switch between 1st and 2nd half
+- **Status Updates**: Change game status (Scheduled/In Progress/Completed)
+
+## 🗄️ Database
+
+- **Type**: SQLite (file-based, no setup required)
+- **Auto-Creation**: Database and tables created automatically
+- **Sample Data**: Pre-loaded with tournament schedule and teams
+
+## 🛠️ Technical Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
 - **Database**: SQLite with better-sqlite3
-- **Real-time**: Polling-based updates (easily upgradeable to WebSockets)
+- **Real-Time**: Server-side timers with client polling
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ 
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd flag-football-tournament
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Initialize sample data**
-   ```bash
-   # Start the development server first
-   npm run dev
-   
-   # Then visit this URL to initialize sample data
-   http://localhost:3000/api/init-data
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser**
-   - Main schedule: http://localhost:3000
-   - Admin panel: http://localhost:3000/admin
-
-## Usage
-
-### Public Schedule View
-- View all games organized by date
-- See live scores and game status
-- Filter games by specific dates
-- Real-time updates every 5 seconds
-
-### Admin Panel
-- Select any game to update
-- Modify scores, game status, quarter, and time remaining
-- Update team statistics automatically
-- Track wins/losses and points for/against
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 ├── app/
-│   ├── admin/           # Admin panel page
-│   ├── api/             # API routes
-│   │   ├── games/       # Game management endpoints
-│   │   └── init-data/   # Sample data initialization
-│   ├── globals.css      # Global styles
-│   ├── layout.tsx       # Root layout with navigation
-│   └── page.tsx         # Main schedule page
+│   ├── admin/page.tsx          # Admin panel
+│   ├── api/                    # API routes
+│   ├── globals.css            # Global styles
+│   ├── layout.tsx             # Root layout
+│   └── page.tsx               # Public schedule view
 ├── components/
-│   ├── Navigation.tsx   # Top navigation bar
-│   └── ScheduleView.tsx # Main schedule component
+│   └── ScheduleView.tsx       # Schedule display component
 ├── lib/
-│   ├── database.ts      # Database operations
-│   └── sampleData.ts    # Sample tournament data
-├── types/
-│   └── index.ts         # TypeScript type definitions
-└── tournament.db        # SQLite database (created automatically)
+│   ├── database.ts            # Database operations
+│   ├── sampleData.ts          # Tournament data
+│   └── timer.ts               # Server-side timer system
+├── public/
+│   └── Krakens-Logo-transparent.png
+└── types/
+    └── index.ts               # TypeScript definitions
 ```
 
-## API Endpoints
+## 🎮 Usage
 
-- `GET /api/games` - Fetch all games
-- `PUT /api/games/[id]` - Update game scores and status
-- `GET /api/init-data` - Initialize sample tournament data
+### For Tournament Day:
 
-## Database Schema
+1. **Start a Game**:
+   - Go to Admin Panel
+   - Select the game
+   - Click "Start Match"
+   - Timer begins countdown
 
-### Teams
-- id, name, color, wins, losses, pointsFor, pointsAgainst
+2. **Update Scores**:
+   - Enter scores in the admin panel
+   - Click "Update Game"
+   - Scores appear live on public view
 
-### Games  
-- id, homeTeamId, awayTeamId, homeScore, awayScore, scheduledTime, field, status, quarter, timeRemaining
+3. **Manage Timer**:
+   - Start/Stop timer as needed
+   - Switch halves (resets timer to 15:00)
+   - Timer shows green when running, red when stopped
 
-### Tournaments
-- id, name, startDate, endDate
+### For Public Viewing:
+- Visit the main page to see live scores and countdown timers
+- Updates automatically every 500ms during active games
+- Shows team logos, scores, and game status
 
-## Customization
+## 🔧 Development
 
-### Adding New Teams
-Use the database operations in `lib/database.ts` or create an admin interface for team management.
+- **Hot Reload**: Changes update automatically
+- **TypeScript**: Full type safety
+- **ESLint**: Code quality checks
+- **Tailwind**: Utility-first CSS
 
-### Modifying Game Fields
-Update the database schema and corresponding TypeScript types in `types/index.ts`.
+## 📄 License
 
-### Styling
-Modify `tailwind.config.js` and `app/globals.css` to customize the appearance.
-
-## Production Deployment
-
-1. **Build the application**
-   ```bash
-   npm run build
-   ```
-
-2. **Start the production server**
-   ```bash
-   npm start
-   ```
-
-3. **Database considerations**
-   - For production, consider using PostgreSQL or MySQL instead of SQLite
-   - Implement proper database migrations
-   - Add database connection pooling
-
-## Future Enhancements
-
-- WebSocket integration for true real-time updates
-- User authentication and role-based access
-- Tournament bracket generation
-- Team registration system
-- Statistics and analytics dashboard
-- Mobile app integration
-- Push notifications for score updates
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-This project is open source and available under the MIT License.
+Built for Margate Krakens Flag Football Club - Squid Games 2025 Tournament
