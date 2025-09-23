@@ -50,10 +50,10 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-krakens-yellow to-krakens-pink">
-      <div className="container mx-auto px-4 pt-6 pb-8 sm:py-8">
+        <main className="min-h-screen bg-gradient-to-br from-krakens-yellow to-krakens-pink">
+          <div className="container mx-auto px-4 pt-2 pb-4 sm:pt-4 sm:pb-6">
         {/* Centered Header */}
-        <div className="text-center mb-6 sm:mb-8">
+        <div className="text-center mb-3 sm:mb-4">
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8">
             <img 
               src="/Krakens-Logo-transparent.png" 
