@@ -4,7 +4,11 @@ import { useState, useEffect } from 'react';
 import { Game } from '@/types';
 
 export default function AdminPanel() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [games, setGames] = useState<any[]>([]);
+  const [teams, setTeams] = useState<any[]>([]);
   const [selectedGame, setSelectedGame] = useState<any>(null);
   const [homeScore, setHomeScore] = useState('');
   const [awayScore, setAwayScore] = useState('');
@@ -13,19 +17,42 @@ export default function AdminPanel() {
   const [timeRemaining, setTimeRemaining] = useState(900);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
-    fetchGames();
-  }, []);
+    if (isAuthenticated) {
+      fetchGames();
+      fetchTeams();
+    }
+  }, [isAuthenticated]);
 
   // Poll for updates every 500ms when timer is running, otherwise every 2 seconds
   useEffect(() => {
+    if (!isAuthenticated) return;
+    
     const interval = setInterval(() => {
       fetchGames();
     }, isTimerRunning ? 500 : 2000);
 
     return () => clearInterval(interval);
-  }, [isTimerRunning]);
+  }, [isTimerRunning, isAuthenticated]);
+
+  const handleLogin = () => {
+    if (password === '_Squid-Games-2025!_') {
+      setIsAuthenticated(true);
+      setPasswordError('');
+    } else {
+      setPasswordError('Incorrect password');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setPassword('');
+    setSelectedGame(null);
+    setShowCreateForm(false);
+  };
 
   const fetchGames = async () => {
     try {
@@ -46,6 +73,16 @@ export default function AdminPanel() {
     }
   };
 
+  const fetchTeams = async () => {
+    try {
+      const response = await fetch('/api/teams');
+      const teamsData = await response.json();
+      setTeams(teamsData);
+    } catch (error) {
+      console.error('Failed to fetch teams:', error);
+    }
+  };
+
   const handleGameSelect = (game: any) => {
     setSelectedGame(game);
     setHomeScore(game.homeScore?.toString() || '');
@@ -54,6 +91,43 @@ export default function AdminPanel() {
     setHalf(game.half || 1);
     setTimeRemaining(game.timeRemaining || 900);
     setIsTimerRunning(game.isTimerRunning === 1);
+    setShowCreateForm(false);
+  };
+
+  const handleCreateGame = async () => {
+    if (!selectedGame) return;
+
+    setIsCreating(true);
+    try {
+      const response = await fetch('/api/games', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          homeTeamId: selectedGame.homeTeamId,
+          awayTeamId: selectedGame.awayTeamId,
+          scheduledTime: selectedGame.scheduledTime,
+          field: selectedGame.field || '1',
+          status: 'scheduled',
+          referee: selectedGame.referee || '',
+        }),
+      });
+
+      if (response.ok) {
+        await fetchGames();
+        alert('Game created successfully!');
+        setShowCreateForm(false);
+        setSelectedGame(null);
+      } else {
+        alert('Failed to create game');
+      }
+    } catch (error) {
+      console.error('Error creating game:', error);
+      alert('Error creating game');
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const formatCountdownTime = (seconds: number) => {
@@ -114,6 +188,61 @@ export default function AdminPanel() {
     });
   };
 
+  // Login form
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-100 py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <div className="flex flex-col items-center space-y-4">
+              <img 
+                src="/Krakens-Logo-transparent.png" 
+                alt="Margate Krakens Logo" 
+                className="h-24 w-auto"
+              />
+              <h1 className="text-4xl font-bold text-krakens-dark">
+                Admin Panel
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Squid Games 2025 - Score Management
+              </p>
+            </div>
+          </div>
+
+          <div className="max-w-md mx-auto">
+            <div className="bg-white rounded-xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-center mb-6">Login Required</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                    placeholder="Enter admin password"
+                  />
+                  {passwordError && (
+                    <p className="text-red-600 text-sm mt-1">{passwordError}</p>
+                  )}
+                </div>
+                <button
+                  onClick={handleLogin}
+                  className="w-full bg-krakens-pink text-white py-2 px-4 rounded-md hover:bg-krakens-pink/90 focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                >
+                  Login
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
@@ -131,6 +260,12 @@ export default function AdminPanel() {
             <p className="text-gray-600 text-lg">
               Squid Games 2025 - Score Management
             </p>
+            <button
+              onClick={handleLogout}
+              className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
+            >
+              Logout
+            </button>
           </div>
         </div>
 
@@ -140,7 +275,24 @@ export default function AdminPanel() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Games List */}
               <div>
-                <h2 className="text-lg font-semibold mb-4">Select Game</h2>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold">Select Game</h2>
+                  <button
+                    onClick={() => {
+                      setShowCreateForm(true);
+                      setSelectedGame({
+                        homeTeamId: 1,
+                        awayTeamId: 2,
+                        scheduledTime: new Date().toISOString(),
+                        field: '1',
+                        referee: ''
+                      });
+                    }}
+                    className="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                  >
+                    + New Game
+                  </button>
+                </div>
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {games.map((game) => (
                     <div
@@ -175,9 +327,99 @@ export default function AdminPanel() {
                 </div>
               </div>
 
-              {/* Game Update Form */}
+              {/* Game Update/Create Form */}
               <div>
-                {selectedGame ? (
+                {showCreateForm ? (
+                  <div>
+                    <h2 className="text-lg font-semibold mb-4">Create New Game</h2>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Home Team
+                        </label>
+                        <select
+                          value={selectedGame?.homeTeamId || ''}
+                          onChange={(e) => setSelectedGame({...selectedGame, homeTeamId: parseInt(e.target.value)})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        >
+                          {teams.map(team => (
+                            <option key={team.id} value={team.id}>{team.name}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Away Team
+                        </label>
+                        <select
+                          value={selectedGame?.awayTeamId || ''}
+                          onChange={(e) => setSelectedGame({...selectedGame, awayTeamId: parseInt(e.target.value)})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        >
+                          {teams.map(team => (
+                            <option key={team.id} value={team.id}>{team.name}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Scheduled Time
+                        </label>
+                        <input
+                          type="datetime-local"
+                          value={selectedGame?.scheduledTime ? new Date(selectedGame.scheduledTime).toISOString().slice(0, 16) : ''}
+                          onChange={(e) => setSelectedGame({...selectedGame, scheduledTime: new Date(e.target.value).toISOString()})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Field
+                        </label>
+                        <input
+                          type="text"
+                          value={selectedGame?.field || '1'}
+                          onChange={(e) => setSelectedGame({...selectedGame, field: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Referee
+                        </label>
+                        <input
+                          type="text"
+                          value={selectedGame?.referee || ''}
+                          onChange={(e) => setSelectedGame({...selectedGame, referee: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        />
+                      </div>
+
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={handleCreateGame}
+                          disabled={isCreating}
+                          className="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isCreating ? 'Creating...' : 'Create Game'}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowCreateForm(false);
+                            setSelectedGame(null);
+                          }}
+                          className="flex-1 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : selectedGame ? (
                   <div>
                     <h2 className="text-lg font-semibold mb-4">Update Game</h2>
                     <div className="space-y-4">
