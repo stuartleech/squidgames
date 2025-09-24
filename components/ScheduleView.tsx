@@ -96,41 +96,44 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                     {/* Teams and scores stacked */}
                     <div className="text-center">
-                      {/* Home Team */}
-                      <div className="flex items-center justify-center space-x-1 mb-1">
-                        <span className="font-semibold text-sm whitespace-nowrap truncate">{game.homeTeamName}</span>
-                        <div 
-                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: game.homeTeamColor }}
-                        ></div>
-                      </div>
-                      
-                      {/* Scores */}
-                      <div className="flex items-center justify-center space-x-1 mb-1">
-                        {game.homeScore !== null && game.awayScore !== null ? (
-                          <>
-                            <div className="text-lg font-bold text-gray-900">
-                              {game.homeScore}
+                      {/* Teams and scores on same line */}
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        {/* Home Team */}
+                        <div className="flex items-center space-x-1 min-w-0 flex-1 justify-end">
+                          <span className="font-semibold text-sm whitespace-nowrap truncate">{game.homeTeamName}</span>
+                          <div 
+                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: game.homeTeamColor }}
+                          ></div>
+                        </div>
+                        
+                        {/* Scores */}
+                        <div className="flex items-center justify-center space-x-1 flex-shrink-0">
+                          {game.homeScore !== null && game.awayScore !== null ? (
+                            <>
+                              <div className="text-lg font-bold text-gray-900">
+                                {game.homeScore}
+                              </div>
+                              <span className="text-gray-500 font-medium text-sm">-</span>
+                              <div className="text-lg font-bold text-gray-900">
+                                {game.awayScore}
+                              </div>
+                            </>
+                          ) : (
+                            <div className="text-sm font-bold text-gray-900">
+                              {formatTime(game.scheduledTime)}
                             </div>
-                            <span className="text-gray-500 font-medium text-sm">-</span>
-                            <div className="text-lg font-bold text-gray-900">
-                              {game.awayScore}
-                            </div>
-                          </>
-                        ) : (
-                          <div className="text-sm font-bold text-gray-900">
-                            {formatTime(game.scheduledTime)}
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Away Team */}
-                      <div className="flex items-center justify-center space-x-1 mb-2">
-                        <div 
-                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: game.awayTeamColor }}
-                        ></div>
-                        <span className="font-semibold text-sm whitespace-nowrap truncate">{game.awayTeamName}</span>
+                          )}
+                        </div>
+                        
+                        {/* Away Team */}
+                        <div className="flex items-center space-x-1 min-w-0 flex-1 justify-start">
+                          <div 
+                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: game.awayTeamColor }}
+                          ></div>
+                          <span className="font-semibold text-sm whitespace-nowrap truncate">{game.awayTeamName}</span>
+                        </div>
                       </div>
                     </div>
 
