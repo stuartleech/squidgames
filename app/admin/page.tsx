@@ -7,6 +7,38 @@ export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Cookie management functions
+  const setCookie = (name: string, value: string, days: number) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  };
+
+  const getCookie = (name: string): string | null => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
+  const deleteCookie = (name: string) => {
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+  };
+
+  // Check for existing login cookie on component mount
+  useEffect(() => {
+    const savedAuth = getCookie('admin_authenticated');
+    if (savedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+  }, []);
   const [games, setGames] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
   const [selectedGame, setSelectedGame] = useState<any>(null);
@@ -48,6 +80,8 @@ export default function AdminPanel() {
     if (password === '_Squid-Games-2025!_') {
       setIsAuthenticated(true);
       setPasswordError('');
+      // Set cookie to remember login for 7 days
+      setCookie('admin_authenticated', 'true', 7);
     } else {
       setPasswordError('Incorrect password');
     }
@@ -58,6 +92,8 @@ export default function AdminPanel() {
     setPassword('');
     setSelectedGame(null);
     setShowCreateForm(false);
+    // Clear the authentication cookie
+    deleteCookie('admin_authenticated');
   };
 
   const fetchGames = async () => {
@@ -286,6 +322,39 @@ export default function AdminPanel() {
       day: 'numeric'
     });
   };
+
+  // Show loading state while checking cookie
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100 py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <div className="flex flex-col items-center space-y-4">
+              <img 
+                src="/Krakens-Logo-transparent.png" 
+                alt="Margate Krakens Logo" 
+                className="h-24 w-auto"
+              />
+              <h1 className="text-4xl font-bold text-krakens-dark">
+                Admin Panel
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Squid Games 2025 - Score Management
+              </p>
+            </div>
+          </div>
+          <div className="max-w-md mx-auto">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-krakens-pink mx-auto"></div>
+                <p className="mt-2 text-gray-600">Loading...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Login form
   if (!isAuthenticated) {

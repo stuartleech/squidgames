@@ -54,17 +54,17 @@ export default function Home() {
           <div className="container mx-auto px-4 pt-2 pb-4 sm:pt-4 sm:pb-6">
         {/* Centered Header */}
         <div className="text-center mb-3 sm:mb-4">
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8">
+          <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-4">
             <img 
               src="/Krakens-Logo-transparent.png" 
               alt="Margate Krakens Logo" 
-              className="h-24 w-auto sm:h-40"
+              className="h-20 w-auto sm:h-40"
             />
             <div>
-              <h1 className="text-3xl sm:text-5xl font-black text-white mb-1 font-orbitron tracking-wider">
+              <h1 className="text-2xl sm:text-5xl font-black text-white mb-1 font-orbitron tracking-wider">
                 SQUID GAMES
               </h1>
-              <p className="text-white/90 text-base sm:text-lg font-medium">
+              <p className="text-white/90 text-sm sm:text-lg font-medium">
                 11th October 2025
               </p>
             </div>

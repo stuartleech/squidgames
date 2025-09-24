@@ -69,34 +69,34 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px]">
+          <table className="w-full min-w-[500px]">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Rank
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Team
                 </th>
-                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-0.5 sm:px-4 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   P
                 </th>
-                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-0.5 sm:px-4 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   W
                 </th>
-                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-0.5 sm:px-4 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   L
                 </th>
-                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-0.5 sm:px-4 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   PF
                 </th>
-                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-0.5 sm:px-4 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   PA
                 </th>
-                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-0.5 sm:px-4 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Diff
                 </th>
-                <th className="px-1 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-0.5 sm:px-4 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   PTS
                 </th>
               </tr>
@@ -104,34 +104,34 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
             <tbody className="bg-white divide-y divide-gray-200">
               {standings.map((team, index) => (
                 <tr key={team.id} className="hover:bg-gray-50">
-                  <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-medium text-gray-900 text-center">
+                  <td className="px-1 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-medium text-gray-900 text-center">
                     {index === 0 ? '🏆' : index + 1}
                   </td>
-                  <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-medium text-gray-900">
+                  <td className="px-1 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-medium text-gray-900">
                     <div className="flex items-center">
                       <div 
-                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full mr-2 sm:mr-3 flex-shrink-0" 
+                        className="w-2.5 h-2.5 sm:w-4 sm:h-4 rounded-full mr-1 sm:mr-3 flex-shrink-0" 
                         style={{ backgroundColor: team.color }}
                       ></div>
                       <span className="truncate">{team.name}</span>
                     </div>
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-500 text-center">
+                  <td className="px-0.5 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-500 text-center">
                     {team.gamesPlayed}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-green-600 font-medium text-center">
+                  <td className="px-0.5 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-green-600 font-medium text-center">
                     {team.wins}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-red-600 font-medium text-center">
+                  <td className="px-0.5 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-red-600 font-medium text-center">
                     {team.losses}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-900 text-center">
+                  <td className="px-0.5 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-900 text-center">
                     {team.pointsFor}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-900 text-center">
+                  <td className="px-0.5 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-900 text-center">
                     {team.pointsAgainst}
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-center">
+                  <td className="px-0.5 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-center">
                     <span className={`font-medium ${
                       team.pointDifferential > 0 ? 'text-green-600' : 
                       team.pointDifferential < 0 ? 'text-red-600' : 
@@ -140,7 +140,7 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
                       {team.pointDifferential > 0 ? '+' : ''}{team.pointDifferential}
                     </span>
                   </td>
-                  <td className="px-1 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-bold text-krakens-pink text-center">
+                  <td className="px-0.5 sm:px-4 py-2 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-bold text-krakens-pink text-center">
                     {team.points}
                   </td>
                 </tr>

@@ -94,43 +94,43 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                 </div>
 
                 {/* Team names and scores in the center */}
-                <div className="flex-1">
-                  <div className="grid grid-cols-3 items-center gap-0">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-1 sm:gap-2">
                     {/* Home Team Name + Circle */}
-                    <div className="col-span-1 flex items-center justify-end space-x-1.5">
-                      <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.homeTeamName}</span>
+                    <div className="flex items-center justify-end space-x-1 sm:space-x-1.5 min-w-0 flex-1">
+                      <span className="font-semibold text-xs sm:text-lg whitespace-nowrap truncate">{game.homeTeamName}</span>
                       <div 
-                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
+                        className="w-2.5 h-2.5 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.homeTeamColor }}
                       ></div>
                     </div>
                     
                     {/* Scores */}
-                    <div className="col-span-1 flex items-center justify-center space-x-1">
+                    <div className="flex items-center justify-center space-x-0.5 sm:space-x-1 flex-shrink-0">
                       {game.homeScore !== null && game.awayScore !== null ? (
                         <>
-                          <div className="text-xl sm:text-3xl font-bold text-gray-900">
+                          <div className="text-lg sm:text-3xl font-bold text-gray-900">
                             {game.homeScore}
                           </div>
-                          <span className="text-gray-500 font-medium text-sm sm:text-lg">-</span>
-                          <div className="text-xl sm:text-3xl font-bold text-gray-900">
+                          <span className="text-gray-500 font-medium text-xs sm:text-lg">-</span>
+                          <div className="text-lg sm:text-3xl font-bold text-gray-900">
                             {game.awayScore}
                           </div>
                         </>
                       ) : (
-                        <div className="text-xl sm:text-3xl font-bold text-gray-900">
+                        <div className="text-sm sm:text-3xl font-bold text-gray-900">
                           {formatTime(game.scheduledTime)}
                         </div>
                       )}
                     </div>
                     
                     {/* Away Team Circle + Name */}
-                    <div className="col-span-1 flex items-center justify-start space-x-1.5">
+                    <div className="flex items-center justify-start space-x-1 sm:space-x-1.5 min-w-0 flex-1">
                       <div 
-                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
+                        className="w-2.5 h-2.5 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
                         style={{ backgroundColor: game.awayTeamColor }}
                       ></div>
-                      <span className="font-semibold text-sm sm:text-lg whitespace-nowrap">{game.awayTeamName}</span>
+                      <span className="font-semibold text-xs sm:text-lg whitespace-nowrap truncate">{game.awayTeamName}</span>
                     </div>
                   </div>
 
