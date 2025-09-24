@@ -81,66 +81,136 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
         </div>
         
         <div className="divide-y divide-gray-200">
-          {sortedGames.map((game) => (
-            <div key={game.id} className="p-3 sm:p-4 hover:bg-gray-50 transition-colors min-h-[80px] sm:min-h-[100px]">
-              <div className="flex items-center h-full">
-                {/* Status on the left - fixed width */}
-                <div className="w-16 sm:w-20 flex justify-center sm:justify-start">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(game.status)}`}>
-                    {game.status === 'in-progress' ? 'LIVE' : 
-                     game.status === 'completed' ? 'FINAL' : 
-                     'SCHEDULED'}
-                  </span>
-                </div>
+              {sortedGames.map((game) => (
+                <div key={game.id} className="p-3 sm:p-4 hover:bg-gray-50 transition-colors min-h-[80px] sm:min-h-[100px]">
+                  {/* Mobile Layout - Stacked */}
+                  <div className="sm:hidden">
+                    {/* Status at top center */}
+                    <div className="flex justify-center mb-2">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(game.status)}`}>
+                        {game.status === 'in-progress' ? 'LIVE' : 
+                         game.status === 'completed' ? 'FINAL' : 
+                         'SCHEDULED'}
+                      </span>
+                    </div>
 
-                {/* Team names and scores in the center */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-1 sm:gap-2">
-                    {/* Home Team Name + Circle */}
-                    <div className="flex items-center justify-end space-x-1 sm:space-x-1.5 min-w-0 flex-1">
-                      <span className="font-semibold text-xs sm:text-lg whitespace-nowrap truncate">{game.homeTeamName}</span>
-                      <div 
-                        className="w-2.5 h-2.5 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: game.homeTeamColor }}
-                      ></div>
+                    {/* Teams and scores stacked */}
+                    <div className="text-center">
+                      {/* Home Team */}
+                      <div className="flex items-center justify-center space-x-1 mb-1">
+                        <span className="font-semibold text-sm whitespace-nowrap truncate">{game.homeTeamName}</span>
+                        <div 
+                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: game.homeTeamColor }}
+                        ></div>
+                      </div>
+                      
+                      {/* Scores */}
+                      <div className="flex items-center justify-center space-x-1 mb-1">
+                        {game.homeScore !== null && game.awayScore !== null ? (
+                          <>
+                            <div className="text-lg font-bold text-gray-900">
+                              {game.homeScore}
+                            </div>
+                            <span className="text-gray-500 font-medium text-sm">-</span>
+                            <div className="text-lg font-bold text-gray-900">
+                              {game.awayScore}
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-sm font-bold text-gray-900">
+                            {formatTime(game.scheduledTime)}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Away Team */}
+                      <div className="flex items-center justify-center space-x-1 mb-2">
+                        <div 
+                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: game.awayTeamColor }}
+                        ></div>
+                        <span className="font-semibold text-sm whitespace-nowrap truncate">{game.awayTeamName}</span>
+                      </div>
                     </div>
-                    
-                    {/* Scores */}
-                    <div className="flex items-center justify-center space-x-0.5 sm:space-x-1 flex-shrink-0">
-                      {game.homeScore !== null && game.awayScore !== null ? (
-                        <>
-                          <div className="text-lg sm:text-3xl font-bold text-gray-900">
-                            {game.homeScore}
-                          </div>
-                          <span className="text-gray-500 font-medium text-xs sm:text-lg">-</span>
-                          <div className="text-lg sm:text-3xl font-bold text-gray-900">
-                            {game.awayScore}
-                          </div>
-                        </>
-                      ) : (
-                        <div className="text-sm sm:text-3xl font-bold text-gray-900">
-                          {formatTime(game.scheduledTime)}
-                        </div>
+
+                    {/* Time, field, ref info at the bottom */}
+                    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600">
+                      <span>🕒 {formatTime(game.scheduledTime)}</span>
+                      <span>🏟️ Field {game.field}</span>
+                      {game.referee && (
+                        <span>👨‍⚖️ Ref: {game.referee}</span>
                       )}
-                    </div>
-                    
-                    {/* Away Team Circle + Name */}
-                    <div className="flex items-center justify-start space-x-1 sm:space-x-1.5 min-w-0 flex-1">
-                      <div 
-                        className="w-2.5 h-2.5 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: game.awayTeamColor }}
-                      ></div>
-                      <span className="font-semibold text-xs sm:text-lg whitespace-nowrap truncate">{game.awayTeamName}</span>
+                      {game.status === 'in-progress' && (
+                        <>
+                          <span>{game.half === 1 ? '1st Half' : '2nd Half'}</span>
+                          <span className={`font-medium ${game.isTimerRunning === 1 ? 'text-green-600 animate-pulse' : 'text-red-600'}`}>
+                            {formatCountdownTime(game.timeRemaining)}
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
 
-                  {/* Time, field, ref info at the bottom */}
-                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600 mt-2">
-                    <span>🕒 {formatTime(game.scheduledTime)}</span>
-                    <span>🏟️ Field {game.field}</span>
-                    {game.referee && (
-                      <span>👨‍⚖️ Ref: {game.referee}</span>
-                    )}
+                  {/* Desktop Layout - Horizontal */}
+                  <div className="hidden sm:flex items-center h-full">
+                    {/* Status on the left - fixed width */}
+                    <div className="w-20 flex justify-start">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(game.status)}`}>
+                        {game.status === 'in-progress' ? 'LIVE' : 
+                         game.status === 'completed' ? 'FINAL' : 
+                         'SCHEDULED'}
+                      </span>
+                    </div>
+
+                    {/* Team names and scores in the center */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        {/* Home Team Name + Circle */}
+                        <div className="flex items-center justify-end space-x-1.5 min-w-0 flex-1">
+                          <span className="font-semibold text-lg whitespace-nowrap truncate">{game.homeTeamName}</span>
+                          <div 
+                            className="w-4 h-4 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: game.homeTeamColor }}
+                          ></div>
+                        </div>
+                        
+                        {/* Scores */}
+                        <div className="flex items-center justify-center space-x-1 flex-shrink-0">
+                          {game.homeScore !== null && game.awayScore !== null ? (
+                            <>
+                              <div className="text-3xl font-bold text-gray-900">
+                                {game.homeScore}
+                              </div>
+                              <span className="text-gray-500 font-medium text-lg">-</span>
+                              <div className="text-3xl font-bold text-gray-900">
+                                {game.awayScore}
+                              </div>
+                            </>
+                          ) : (
+                            <div className="text-3xl font-bold text-gray-900">
+                              {formatTime(game.scheduledTime)}
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Away Team Circle + Name */}
+                        <div className="flex items-center justify-start space-x-1.5 min-w-0 flex-1">
+                          <div 
+                            className="w-4 h-4 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: game.awayTeamColor }}
+                          ></div>
+                          <span className="font-semibold text-lg whitespace-nowrap truncate">{game.awayTeamName}</span>
+                        </div>
+                      </div>
+
+                      {/* Time, field, ref info at the bottom */}
+                      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600 mt-2">
+                        <span>🕒 {formatTime(game.scheduledTime)}</span>
+                        <span>🏟️ Field {game.field}</span>
+                        {game.referee && (
+                          <span>👨‍⚖️ Ref: {game.referee}</span>
+                        )}
                         {game.status === 'in-progress' && (
                           <>
                             <span>{game.half === 1 ? '1st Half' : '2nd Half'}</span>
@@ -149,11 +219,11 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                             </span>
                           </>
                         )}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              ))}
         </div>
       </div>
 
