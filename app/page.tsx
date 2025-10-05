@@ -174,13 +174,13 @@ export default function Home() {
                           <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-medium flex-shrink-0">
                             QB RUN
                           </div>
-                          <p>Any team can run their QB directly from snap <strong>ONCE per quarter</strong>. This will be noted on the scoresheet by the refereeing team.</p>
+                          <p>Any team can run their QB directly from snap <strong>ONCE per half</strong>. This will be noted on the scoresheet by the refereeing team.</p>
                         </div>
                         <div className="flex items-start space-x-3">
                           <div className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium flex-shrink-0">
                             BULLET BLITZ
                           </div>
-                          <p>Any team can blitz from anywhere <strong>ONCE per quarter</strong>. This will be noted on the scoresheet by the refereeing team.</p>
+                          <p>Any team can blitz from anywhere <strong>ONCE per half</strong>. This will be noted on the scoresheet by the refereeing team.</p>
                         </div>
                       </div>
                     </div>
@@ -193,7 +193,7 @@ export default function Home() {
                       <div className="text-gray-700 space-y-2">
                         <p>• All standard flag football rules apply</p>
                         <p>• Referees will track special plays (QB RUN and BULLET BLITZ) on the scoresheet</p>
-                        <p>• Teams are limited to one QB RUN and one BULLET BLITZ per quarter</p>
+                        <p>• Teams are limited to one QB RUN and one BULLET BLITZ per half</p>
                         <p>• Penalties during throw off situations follow standard flag football penalty rules</p>
                       </div>
                     </div>
