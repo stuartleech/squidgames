@@ -17,8 +17,8 @@ class InMemoryDatabase {
           // Sample teams data for Squid Games 2025
           const sampleTeams = [
             { name: 'Margate Krakens', color: '#d80e61' },
-            { name: 'Kent Exiles A', color: '#000000' },
-            { name: 'Kent Exiles B', color: '#c0c0c0' },
+            { name: 'Exiles Black', color: '#000000' },
+            { name: 'Exiles Silver', color: '#c0c0c0' },
             { name: 'Solent Red Storm', color: '#dc2626' },
           ];
 
@@ -38,7 +38,7 @@ class InMemoryDatabase {
       const sampleGames: Omit<Game, 'id'>[] = [
         {
           homeTeamId: 1, // Margate Krakens
-          awayTeamId: 2, // Kent Exiles A
+          awayTeamId: 2, // Exiles Black
           scheduledTime: new Date('2025-10-11T10:00:00').toISOString(),
           field: '1',
           status: 'scheduled' as const,
@@ -51,7 +51,7 @@ class InMemoryDatabase {
         },
         {
           homeTeamId: 4, // Solent Red Storm
-          awayTeamId: 3, // Kent Exiles B
+          awayTeamId: 3, // Exiles Silver
           scheduledTime: new Date('2025-10-11T10:40:00').toISOString(),
           field: '1',
           status: 'scheduled' as const,
@@ -64,7 +64,7 @@ class InMemoryDatabase {
         },
         {
           homeTeamId: 1, // Margate Krakens
-          awayTeamId: 3, // Kent Exiles B
+          awayTeamId: 3, // Exiles Silver
           scheduledTime: new Date('2025-10-11T11:40:00').toISOString(),
           field: '1',
           status: 'scheduled' as const,
@@ -76,7 +76,7 @@ class InMemoryDatabase {
           referee: 'Solent Red Storm'
         },
         {
-          homeTeamId: 2, // Kent Exiles A
+          homeTeamId: 2, // Exiles Black
           awayTeamId: 4, // Solent Red Storm
           scheduledTime: new Date('2025-10-11T12:20:00').toISOString(),
           field: '1',
@@ -89,8 +89,8 @@ class InMemoryDatabase {
           referee: 'Margate Krakens'
         },
         {
-          homeTeamId: 2, // Kent Exiles A
-          awayTeamId: 3, // Kent Exiles B
+          homeTeamId: 2, // Exiles Black
+          awayTeamId: 3, // Exiles Silver
           scheduledTime: new Date('2025-10-11T13:20:00').toISOString(),
           field: '1',
           status: 'scheduled' as const,
@@ -112,7 +112,7 @@ class InMemoryDatabase {
           half: 1,
           timeRemaining: 900,
           isTimerRunning: false,
-          referee: 'Kent Exiles A'
+          referee: 'Exiles Black'
         }
       ];
 
