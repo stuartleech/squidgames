@@ -48,6 +48,7 @@ export default function AdminPanel() {
   const [half, setHalf] = useState(1);
   const [timeRemaining, setTimeRemaining] = useState(900);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [referee, setReferee] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -133,6 +134,7 @@ export default function AdminPanel() {
     setHalf(game.half || 1);
     setTimeRemaining(game.timeRemaining || 900);
     setIsTimerRunning(game.isTimerRunning === 1);
+    setReferee(game.referee || '');
     setShowCreateForm(false);
   };
 
@@ -288,6 +290,7 @@ export default function AdminPanel() {
           half,
           timeRemaining,
           isTimerRunning,
+          referee,
         }),
       });
 
@@ -752,6 +755,19 @@ export default function AdminPanel() {
                             placeholder="0"
                           />
                         </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Referee
+                        </label>
+                        <input
+                          type="text"
+                          value={referee}
+                          onChange={(e) => setReferee(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                          placeholder="Enter referee name"
+                        />
                       </div>
 
                       <div className="flex space-x-2">

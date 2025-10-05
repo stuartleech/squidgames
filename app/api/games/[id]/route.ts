@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { homeScore, awayScore, status, half, timeRemaining, isTimerRunning } = await request.json();
+    const { homeScore, awayScore, status, half, timeRemaining, isTimerRunning, referee } = await request.json();
     const gameId = parseInt(params.id);
 
     if (!gameId) {
@@ -41,6 +41,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (half) updateData.half = half;
     if (timeRemaining !== undefined) updateData.timeRemaining = timeRemaining;
     if (isTimerRunning !== undefined) updateData.isTimerRunning = isTimerRunning ? 1 : 0;
+    if (referee !== undefined) updateData.referee = referee;
 
         dbOperations.updateGame(gameId, updateData);
 
