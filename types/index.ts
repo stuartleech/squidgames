@@ -41,3 +41,11 @@ export interface Tournament {
   teams: Team[];
   games: Game[];
 }
+
+export interface Rules {
+  id: number;
+  title: string;
+  content: string;
+  section: 'throw-off' | 'special-plays' | 'general-notes';
+  order: number;
+}

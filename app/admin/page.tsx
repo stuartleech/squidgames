@@ -58,11 +58,19 @@ export default function AdminPanel() {
   const [teamColor, setTeamColor] = useState('#000000');
   const [teamLogo, setTeamLogo] = useState('');
   const [isDeletingGame, setIsDeletingGame] = useState(false);
+  const [rules, setRules] = useState<any[]>([]);
+  const [showRulesManagement, setShowRulesManagement] = useState(false);
+  const [selectedRule, setSelectedRule] = useState<any>(null);
+  const [ruleTitle, setRuleTitle] = useState('');
+  const [ruleContent, setRuleContent] = useState('');
+  const [ruleSection, setRuleSection] = useState('throw-off');
+  const [ruleOrder, setRuleOrder] = useState(1);
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchGames();
       fetchTeams();
+      fetchRules();
     }
   }, [isAuthenticated]);
 
@@ -123,6 +131,16 @@ export default function AdminPanel() {
       setTeams(teamsData);
     } catch (error) {
       console.error('Failed to fetch teams:', error);
+    }
+  };
+
+  const fetchRules = async () => {
+    try {
+      const response = await fetch('/api/rules');
+      const rulesData = await response.json();
+      setRules(rulesData);
+    } catch (error) {
+      console.error('Failed to fetch rules:', error);
     }
   };
 
@@ -264,6 +282,112 @@ export default function AdminPanel() {
     } catch (error) {
       console.error('Error deleting team:', error);
       alert('Error deleting team');
+    }
+  };
+
+  // Rules Management Functions
+  const handleRuleSelect = (rule: any) => {
+    setSelectedRule(rule);
+    setRuleTitle(rule.title);
+    setRuleContent(rule.content);
+    setRuleSection(rule.section);
+    setRuleOrder(rule.order);
+    setShowCreateForm(false);
+    setShowTeamManagement(false);
+  };
+
+  const handleCreateRule = async () => {
+    if (!ruleTitle.trim() || !ruleContent.trim()) {
+      alert('Rule title and content are required');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/rules', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: ruleTitle,
+          content: ruleContent,
+          section: ruleSection,
+          order: ruleOrder,
+        }),
+      });
+
+      if (response.ok) {
+        await fetchRules();
+        alert('Rule created successfully!');
+        setRuleTitle('');
+        setRuleContent('');
+        setRuleSection('throw-off');
+        setRuleOrder(1);
+        setSelectedRule(null);
+      } else {
+        alert('Failed to create rule');
+      }
+    } catch (error) {
+      console.error('Error creating rule:', error);
+      alert('Error creating rule');
+    }
+  };
+
+  const handleUpdateRule = async () => {
+    if (!selectedRule) return;
+
+    try {
+      const response = await fetch(`/api/rules/${selectedRule.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: ruleTitle,
+          content: ruleContent,
+          section: ruleSection,
+          order: ruleOrder,
+        }),
+      });
+
+      if (response.ok) {
+        await fetchRules();
+        alert('Rule updated successfully!');
+        setSelectedRule(null);
+      } else {
+        alert('Failed to update rule');
+      }
+    } catch (error) {
+      console.error('Error updating rule:', error);
+      alert('Error updating rule');
+    }
+  };
+
+  const handleDeleteRule = async (ruleId: number) => {
+    const rule = rules.find(r => r.id === ruleId);
+    if (!rule) return;
+
+    if (!confirm(`Are you sure you want to delete "${rule.title}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/rules/${ruleId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        await fetchRules();
+        alert('Rule deleted successfully!');
+        if (selectedRule && selectedRule.id === ruleId) {
+          setSelectedRule(null);
+        }
+      } else {
+        alert('Failed to delete rule');
+      }
+    } catch (error) {
+      console.error('Error deleting rule:', error);
+      alert('Error deleting rule');
     }
   };
 
@@ -456,6 +580,12 @@ export default function AdminPanel() {
                       {showTeamManagement ? 'Hide Teams' : 'Manage Teams'}
                     </button>
                     <button
+                      onClick={() => setShowRulesManagement(!showRulesManagement)}
+                      className="bg-purple-600 text-white px-3 py-1 rounded-md text-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    >
+                      {showRulesManagement ? 'Hide Rules' : 'Manage Rules'}
+                    </button>
+                    <button
                       onClick={() => {
                         setShowCreateForm(true);
                         setSelectedGame({
@@ -565,6 +695,102 @@ export default function AdminPanel() {
                           </button>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Rules Management Section */}
+                {showRulesManagement && (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-4">Rules Management</h3>
+                    
+                    {/* Create New Rule */}
+                    <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                      <h4 className="font-medium mb-3">Add New Rule</h4>
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          placeholder="Rule Title"
+                          value={ruleTitle}
+                          onChange={(e) => setRuleTitle(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        />
+                        <textarea
+                          placeholder="Rule Content (supports markdown)"
+                          value={ruleContent}
+                          onChange={(e) => setRuleContent(e.target.value)}
+                          rows={4}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                        />
+                        <div className="grid grid-cols-2 gap-3">
+                          <select
+                            value={ruleSection}
+                            onChange={(e) => setRuleSection(e.target.value)}
+                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                          >
+                            <option value="throw-off">Throw Off Rules</option>
+                            <option value="special-plays">Special Plays</option>
+                            <option value="general-notes">General Notes</option>
+                          </select>
+                          <input
+                            type="number"
+                            placeholder="Order"
+                            value={ruleOrder}
+                            onChange={(e) => setRuleOrder(parseInt(e.target.value) || 1)}
+                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                          />
+                        </div>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={handleCreateRule}
+                            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                          >
+                            Create Rule
+                          </button>
+                          {selectedRule && (
+                            <button
+                              onClick={handleUpdateRule}
+                              className="bg-krakens-pink text-white px-4 py-2 rounded-md hover:bg-krakens-pink/90 focus:outline-none focus:ring-2 focus:ring-krakens-pink"
+                            >
+                              Update Rule
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Existing Rules */}
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-medium mb-3">Existing Rules</h4>
+                      <div className="space-y-2">
+                        {rules.map((rule) => (
+                          <div key={rule.id} className="flex items-center justify-between p-3 bg-white rounded border">
+                            <div className="flex-1">
+                              <div className="font-medium">{rule.title}</div>
+                              <div className="text-sm text-gray-600 capitalize">{rule.section.replace('-', ' ')}</div>
+                            </div>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => handleRuleSelect(rule)}
+                                className="text-blue-600 hover:text-blue-800 px-2 py-1 rounded text-sm"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteRule(rule.id)}
+                                className="text-red-600 hover:text-red-800 px-2 py-1 rounded text-sm"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                        {rules.length === 0 && (
+                          <div className="text-center py-4 text-gray-500">
+                            No rules found. Click "Create Rule" to add your first rule.
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}

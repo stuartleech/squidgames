@@ -103,7 +103,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                           <span className="font-semibold text-sm whitespace-nowrap truncate">{game.homeTeamName}</span>
                           <div 
                             className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: game.homeTeamColor }}
+                            style={{ background: game.homeTeamColor }}
                           ></div>
                         </div>
                         
@@ -130,7 +130,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                         <div className="flex items-center space-x-1 min-w-0 flex-1 justify-start">
                           <div 
                             className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: game.awayTeamColor }}
+                            style={{ background: game.awayTeamColor }}
                           ></div>
                           <span className="font-semibold text-sm whitespace-nowrap truncate">{game.awayTeamName}</span>
                         </div>
@@ -174,7 +174,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                           <span className="font-semibold text-lg whitespace-nowrap truncate">{game.homeTeamName}</span>
                           <div 
                             className="w-4 h-4 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: game.homeTeamColor }}
+                            style={{ background: game.homeTeamColor }}
                           ></div>
                         </div>
                         
@@ -201,7 +201,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                         <div className="flex items-center justify-start space-x-1.5 min-w-0 flex-1">
                           <div 
                             className="w-4 h-4 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: game.awayTeamColor }}
+                            style={{ background: game.awayTeamColor }}
                           ></div>
                           <span className="font-semibold text-lg whitespace-nowrap truncate">{game.awayTeamName}</span>
                         </div>

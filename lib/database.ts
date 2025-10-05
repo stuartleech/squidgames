@@ -1,4 +1,4 @@
-import { Team, Game, Tournament } from '@/types';
+import { Team, Game, Tournament, Rules } from '@/types';
 
 // Check if we're in a serverless environment
 const isServerless = process.env.VERCEL || process.env.NETLIFY || process.env.NODE_ENV === 'production';
@@ -50,6 +50,14 @@ if (isServerless) {
         name TEXT NOT NULL,
         startDate TEXT NOT NULL,
         endDate TEXT NOT NULL
+      );
+      
+      CREATE TABLE IF NOT EXISTS rules (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        section TEXT NOT NULL,
+        order_index INTEGER NOT NULL
       );
     `);
 
@@ -182,6 +190,38 @@ if (isServerless) {
         const setClause = fields.map(field => `${field} = ?`).join(', ');
         const stmt = db.prepare(`UPDATE tournaments SET ${setClause} WHERE id = ?`);
         return stmt.run(...values, id);
+      },
+
+      // Rules
+      createRule: (rule: Omit<Rules, 'id'>) => {
+        const stmt = db.prepare(`
+          INSERT INTO rules (title, content, section, order_index)
+          VALUES (?, ?, ?, ?)
+        `);
+        return stmt.run(rule.title, rule.content, rule.section, rule.order);
+      },
+
+      getAllRules: () => {
+        const stmt = db.prepare('SELECT * FROM rules ORDER BY order_index');
+        return stmt.all();
+      },
+
+      getRuleById: (id: number) => {
+        const stmt = db.prepare('SELECT * FROM rules WHERE id = ?');
+        return stmt.get(id);
+      },
+
+      updateRule: (id: number, updates: Partial<Rules>) => {
+        const fields = Object.keys(updates).filter(key => key !== 'id');
+        const values = fields.map(field => (updates as any)[field]);
+        const setClause = fields.map(field => `${field} = ?`).join(', ');
+        const stmt = db.prepare(`UPDATE rules SET ${setClause} WHERE id = ?`);
+        return stmt.run(...values, id);
+      },
+
+      deleteRule: (id: number) => {
+        const stmt = db.prepare('DELETE FROM rules WHERE id = ?');
+        return stmt.run(id);
       },
     };
   } catch (error) {

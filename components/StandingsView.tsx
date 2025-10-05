@@ -111,7 +111,7 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
                     <div className="flex items-center">
                       <div 
                         className="w-2.5 h-2.5 sm:w-4 sm:h-4 rounded-full mr-1 sm:mr-3 flex-shrink-0" 
-                        style={{ backgroundColor: team.color }}
+                        style={{ background: team.color }}
                       ></div>
                       <span className="truncate">{team.name}</span>
                     </div>

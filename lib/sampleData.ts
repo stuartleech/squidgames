@@ -2,7 +2,7 @@ import { dbOperations } from '@/lib/database';
 
 // Sample teams data for Squid Games 2025
 const sampleTeams = [
-  { name: 'Margate Krakens', color: '#d80e61' },
+  { name: 'Margate Krakens', color: 'linear-gradient(45deg, #f9c413 50%, #d80e61 50%)' },
   { name: 'Exiles Black', color: '#000000' },
   { name: 'Exiles Silver', color: '#c0c0c0' },
   { name: 'Solent Red Storm', color: '#dc2626' },

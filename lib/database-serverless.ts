@@ -1,10 +1,11 @@
-import { Team, Game, Tournament } from '@/types';
+import { Team, Game, Tournament, Rules } from '@/types';
 
 // In-memory database for serverless deployment
 class InMemoryDatabase {
   private teams: Team[] = [];
   private games: Game[] = [];
   private tournaments: Tournament[] = [];
+  private rules: Rules[] = [];
   private nextId = 1;
 
   constructor() {
@@ -15,12 +16,12 @@ class InMemoryDatabase {
     // Only initialize if empty (to avoid duplicates on multiple calls)
     if (this.teams.length === 0) {
           // Sample teams data for Squid Games 2025
-          const sampleTeams = [
-            { name: 'Margate Krakens', color: '#d80e61' },
-            { name: 'Exiles Black', color: '#000000' },
-            { name: 'Exiles Silver', color: '#c0c0c0' },
-            { name: 'Solent Red Storm', color: '#dc2626' },
-          ];
+    const sampleTeams = [
+      { name: 'Margate Krakens', color: 'linear-gradient(45deg, #f9c413 50%, #d80e61 50%)' },
+      { name: 'Exiles Black', color: '#000000' },
+      { name: 'Exiles Silver', color: '#c0c0c0' },
+      { name: 'Solent Red Storm', color: '#dc2626' },
+    ];
 
       // Create sample teams
       sampleTeams.forEach(team => {
@@ -233,6 +234,39 @@ class InMemoryDatabase {
     }
     return { changes: 0 };
   }
+
+  // Rules
+  createRule(rule: Omit<Rules, 'id'>): { changes: number; lastInsertRowid: number } {
+    const newRule = { ...rule, id: this.nextId++ };
+    this.rules.push(newRule);
+    return { changes: 1, lastInsertRowid: newRule.id };
+  }
+
+  getAllRules(): Rules[] {
+    return [...this.rules].sort((a, b) => a.order - b.order);
+  }
+
+  getRuleById(id: number): Rules | undefined {
+    return this.rules.find(rule => rule.id === id);
+  }
+
+  updateRule(id: number, updates: Partial<Rules>): { changes: number } {
+    const index = this.rules.findIndex(rule => rule.id === id);
+    if (index !== -1) {
+      this.rules[index] = { ...this.rules[index], ...updates };
+      return { changes: 1 };
+    }
+    return { changes: 0 };
+  }
+
+  deleteRule(id: number): { changes: number } {
+    const index = this.rules.findIndex(rule => rule.id === id);
+    if (index !== -1) {
+      this.rules.splice(index, 1);
+      return { changes: 1 };
+    }
+    return { changes: 0 };
+  }
 }
 
 // Use in-memory database for serverless deployment
@@ -256,4 +290,11 @@ export const dbOperations = {
   getAllTournaments: () => db.getAllTournaments(),
   getTournamentById: (id: number) => db.getTournamentById(id),
   updateTournament: (id: number, updates: Partial<Tournament>) => db.updateTournament(id, updates),
+
+  // Rules
+  createRule: (rule: Omit<Rules, 'id'>) => db.createRule(rule),
+  getAllRules: () => db.getAllRules(),
+  getRuleById: (id: number) => db.getRuleById(id),
+  updateRule: (id: number, updates: Partial<Rules>) => db.updateRule(id, updates),
+  deleteRule: (id: number) => db.deleteRule(id),
 };

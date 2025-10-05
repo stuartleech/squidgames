@@ -8,6 +8,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'schedule' | 'standings' | 'rules'>('schedule');
   const [games, setGames] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
+  const [rules, setRules] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -17,23 +18,27 @@ export default function Home() {
       setHasError(false);
       
       try {
-        const [gamesResponse, teamsResponse] = await Promise.all([
+        const [gamesResponse, teamsResponse, rulesResponse] = await Promise.all([
           fetch('/api/games'),
-          fetch('/api/teams')
+          fetch('/api/teams'),
+          fetch('/api/rules')
         ]);
         
-        if (gamesResponse.ok && teamsResponse.ok) {
+        if (gamesResponse.ok && teamsResponse.ok && rulesResponse.ok) {
           const gamesData = await gamesResponse.json();
           const teamsData = await teamsResponse.json();
+          const rulesData = await rulesResponse.json();
           
           setGames(gamesData);
           setTeams(teamsData);
+          setRules(rulesData);
         } else {
-          console.error('Failed to fetch data:', gamesResponse.status, teamsResponse.status);
+          console.error('Failed to fetch data:', gamesResponse.status, teamsResponse.status, rulesResponse.status);
           setHasError(true);
           // Set empty arrays as fallback
           setGames([]);
           setTeams([]);
+          setRules([]);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -41,6 +46,7 @@ export default function Home() {
         // Set empty arrays as fallback
         setGames([]);
         setTeams([]);
+        setRules([]);
       } finally {
         setIsLoading(false);
       }
@@ -140,63 +146,30 @@ export default function Home() {
                   </div>
                   
                   <div className="p-6 space-y-6">
-                    {/* Throw Off Rules */}
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                        🏈 Throw Off Rules
-                      </h3>
-                      <div className="space-y-3 text-gray-700">
-                        <p>
-                          At the start of each half, the team who starts with the ball has the opportunity to return a <strong>3-on-1 throw off situation</strong> which involves:
-                        </p>
-                        <ul className="list-disc list-inside space-y-2 ml-4">
-                          <li>One returner in the endzone of their own half</li>
-                          <li>Three members of the defending team who must line up as follows:</li>
-                        </ul>
-                        <div className="ml-6 space-y-2">
-                          <p><strong>Thrower:</strong> Lines up at halfway and cannot move until the returner catches the ball. He can then proceed to join his teammates in trying to tackle the returner.</p>
-                          <p><strong>Two Defenders:</strong> Must line up on their own goal line but as soon as the ball is thrown they can chase down the returner.</p>
-                        </div>
-                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 mt-3">
-                          <p><strong>Important:</strong> The ball must go further than 10 yards on the throw off. If the ball goes out of bounds without touching the returning player, the returning team will start their drive 1 yard from the halfway line.</p>
-                        </div>
-                        <p>Wherever the runner finishes the play (tackled/out of bounds) is where the offense starts their drive on the ensuing play. Any of the standard flag football penalties apply during this play.</p>
-                      </div>
-                    </div>
-
-                    {/* Special Plays */}
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                        ⚡ Special Plays
-                      </h3>
-                      <div className="space-y-4 text-gray-700">
-                        <div className="flex items-start space-x-3">
-                          <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-medium flex-shrink-0">
-                            QB RUN
-                          </div>
-                          <p>Any team can run their QB directly from snap <strong>ONCE per half</strong>. This will be noted on the scoresheet by the refereeing team.</p>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm font-medium flex-shrink-0">
-                            BULLET BLITZ
-                          </div>
-                          <p>Any team can blitz from anywhere <strong>ONCE per half</strong>. This will be noted on the scoresheet by the refereeing team.</p>
+                    {rules.length === 0 ? (
+                      <div className="text-center py-12">
+                        <div className="text-gray-500 text-lg">
+                          No rules available. Please contact the administrator.
                         </div>
                       </div>
-                    </div>
-
-                    {/* General Notes */}
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                        📝 General Notes
-                      </h3>
-                      <div className="text-gray-700 space-y-2">
-                        <p>• All standard flag football rules apply</p>
-                        <p>• Referees will track special plays (QB RUN and BULLET BLITZ) on the scoresheet</p>
-                        <p>• Teams are limited to one QB RUN and one BULLET BLITZ per half</p>
-                        <p>• Penalties during throw off situations follow standard flag football penalty rules</p>
-                      </div>
-                    </div>
+                    ) : (
+                      rules.map((rule) => (
+                        <div key={rule.id} className="bg-gray-50 rounded-lg p-4">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                            {rule.section === 'throw-off' && '🏈'}
+                            {rule.section === 'special-plays' && '⚡'}
+                            {rule.section === 'general-notes' && '📝'}
+                            {' '}{rule.title}
+                          </h3>
+                          <div 
+                            className="text-gray-700 prose prose-sm max-w-none"
+                            dangerouslySetInnerHTML={{ 
+                              __html: rule.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') 
+                            }}
+                          />
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
