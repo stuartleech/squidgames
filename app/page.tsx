@@ -5,7 +5,7 @@ import ScheduleView from '@/components/ScheduleView';
 import StandingsView from '@/components/StandingsView';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'schedule' | 'standings'>('schedule');
+  const [activeTab, setActiveTab] = useState<'schedule' | 'standings' | 'rules'>('schedule');
   const [games, setGames] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
