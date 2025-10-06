@@ -37,6 +37,25 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
     });
   };
 
+  const formatTimeRange = (timeString: string) => {
+    const startDate = new Date(timeString);
+    const endDate = new Date(startDate.getTime() + 30 * 60000); // Add 30 minutes
+    
+    const startTime = startDate.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
+    const endTime = endDate.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
+    return `${startTime} - ${endTime}`;
+  };
+
   const formatDate = (timeString: string) => {
     const date = new Date(timeString);
     return date.toLocaleDateString('en-US', { 
@@ -139,7 +158,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                     {/* Time, field, ref info at the bottom */}
                     <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600">
-                      <span>🕒 {formatTime(game.scheduledTime)}</span>
+                      <span>🕒 {formatTimeRange(game.scheduledTime)}</span>
                       <span>🏟️ Field {game.field}</span>
                       {game.referee && (
                         <span>👨‍⚖️ Ref: {game.referee}</span>
@@ -209,7 +228,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
                       {/* Time, field, ref info at the bottom */}
                       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600 mt-2">
-                        <span>🕒 {formatTime(game.scheduledTime)}</span>
+                        <span>🕒 {formatTimeRange(game.scheduledTime)}</span>
                         <span>🏟️ Field {game.field}</span>
                         {game.referee && (
                           <span>👨‍⚖️ Ref: {game.referee}</span>

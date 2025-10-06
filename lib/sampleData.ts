@@ -39,7 +39,7 @@ const sampleGames = [
   {
     homeTeamId: 1, // Margate Krakens
     awayTeamId: 3, // Exiles Silver
-    scheduledTime: new Date('2025-10-11T11:40:00+01:00').toISOString(), // UK time with BST offset
+    scheduledTime: new Date('2025-10-11T11:30:00+01:00').toISOString(), // UK time with BST offset
     field: '1',
     status: 'scheduled',
     homeScore: null,
@@ -52,7 +52,7 @@ const sampleGames = [
   {
     homeTeamId: 2, // Exiles Black
     awayTeamId: 4, // Solent Red Storm
-    scheduledTime: new Date('2025-10-11T12:20:00+01:00').toISOString(), // UK time with BST offset
+    scheduledTime: new Date('2025-10-11T12:10:00+01:00').toISOString(), // UK time with BST offset
     field: '1',
     status: 'scheduled',
     homeScore: null,
@@ -65,7 +65,7 @@ const sampleGames = [
   {
     homeTeamId: 2, // Exiles Black
     awayTeamId: 3, // Exiles Silver
-    scheduledTime: new Date('2025-10-11T13:20:00+01:00').toISOString(), // UK time with BST offset
+    scheduledTime: new Date('2025-10-11T13:00:00+01:00').toISOString(), // UK time with BST offset
     field: '1',
     status: 'scheduled',
     homeScore: null,
@@ -78,7 +78,7 @@ const sampleGames = [
   {
     homeTeamId: 1, // Margate Krakens
     awayTeamId: 4, // Solent Red Storm
-    scheduledTime: new Date('2025-10-11T14:00:00+01:00').toISOString(), // UK time with BST offset
+    scheduledTime: new Date('2025-10-11T13:40:00+01:00').toISOString(), // UK time with BST offset
     field: '1',
     status: 'scheduled',
     homeScore: null,
