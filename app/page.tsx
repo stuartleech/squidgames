@@ -57,7 +57,7 @@ export default function Home() {
 
   return (
         <main className="min-h-screen bg-gradient-to-br from-krakens-yellow to-krakens-pink">
-          <div className="container mx-auto px-4 pt-2 pb-4 sm:pt-4 sm:pb-6">
+          <div className="container mx-auto px-4 pt-2 pb-8 sm:pt-4 sm:pb-12">
         {/* Centered Header */}
         <div className="text-center mb-3 sm:mb-4">
           <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-4">

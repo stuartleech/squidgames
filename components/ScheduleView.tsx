@@ -157,16 +157,16 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                     </div>
 
                     {/* Time, field, ref info at the bottom */}
-                    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600">
-                      <span>🕒 {formatTimeRange(game.scheduledTime)}</span>
-                      <span>🏟️ Field {game.field}</span>
+                    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-gray-600">
+                      <span className="whitespace-nowrap">🕒 {formatTimeRange(game.scheduledTime)}</span>
+                      <span className="whitespace-nowrap">🏟️ Field {game.field}</span>
                       {game.referee && (
-                        <span>👨‍⚖️ Ref: {game.referee}</span>
+                        <span className="whitespace-nowrap">👨‍⚖️ Ref: {game.referee}</span>
                       )}
                       {game.status === 'in-progress' && (
                         <>
-                          <span>{game.half === 1 ? '1st Half' : '2nd Half'}</span>
-                          <span className={`font-medium ${game.isTimerRunning === 1 ? 'text-green-600 animate-pulse' : 'text-red-600'}`}>
+                          <span className="whitespace-nowrap">{game.half === 1 ? '1st Half' : '2nd Half'}</span>
+                          <span className={`font-medium whitespace-nowrap ${game.isTimerRunning === 1 ? 'text-green-600 animate-pulse' : 'text-red-600'}`}>
                             {formatCountdownTime(game.timeRemaining)}
                           </span>
                         </>
