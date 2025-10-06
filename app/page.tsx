@@ -82,7 +82,7 @@ export default function Home() {
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-1">
             <button
               onClick={() => setActiveTab('schedule')}
-              className={`px-6 py-2 rounded-md font-medium transition-all ${
+              className={`px-3 sm:px-6 py-2 rounded-md font-medium transition-all text-sm sm:text-base ${
                 activeTab === 'schedule'
                   ? 'bg-white text-krakens-pink shadow-lg'
                   : 'text-white hover:bg-white/10'
@@ -92,7 +92,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setActiveTab('standings')}
-              className={`px-6 py-2 rounded-md font-medium transition-all ${
+              className={`px-3 sm:px-6 py-2 rounded-md font-medium transition-all text-sm sm:text-base ${
                 activeTab === 'standings'
                   ? 'bg-white text-krakens-pink shadow-lg'
                   : 'text-white hover:bg-white/10'
@@ -102,7 +102,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setActiveTab('rules')}
-              className={`px-6 py-2 rounded-md font-medium transition-all ${
+              className={`px-3 sm:px-6 py-2 rounded-md font-medium transition-all text-sm sm:text-base ${
                 activeTab === 'rules'
                   ? 'bg-white text-krakens-pink shadow-lg'
                   : 'text-white hover:bg-white/10'

@@ -97,10 +97,10 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                     {/* Teams and scores stacked */}
                     <div className="text-center">
                       {/* Teams and scores on same line */}
-                      <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center justify-between gap-1 mb-2">
                         {/* Home Team */}
                         <div className="flex items-center space-x-1 min-w-0 flex-1 justify-end">
-                          <span className="font-semibold text-sm whitespace-nowrap truncate">{game.homeTeamName}</span>
+                          <span className="font-semibold text-xs whitespace-nowrap">{game.homeTeamName}</span>
                           <div 
                             className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                             style={{ background: game.homeTeamColor }}
@@ -108,7 +108,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                         </div>
                         
                         {/* Scores */}
-                        <div className="flex items-center justify-center space-x-1 flex-shrink-0">
+                        <div className="flex items-center justify-center space-x-1 flex-shrink-0 mx-2">
                           {game.homeScore !== null && game.awayScore !== null ? (
                             <>
                               <div className="text-lg font-bold text-gray-900">
@@ -132,7 +132,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                             className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                             style={{ background: game.awayTeamColor }}
                           ></div>
-                          <span className="font-semibold text-sm whitespace-nowrap truncate">{game.awayTeamName}</span>
+                          <span className="font-semibold text-xs whitespace-nowrap">{game.awayTeamName}</span>
                         </div>
                       </div>
                     </div>
