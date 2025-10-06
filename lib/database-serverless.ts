@@ -130,6 +130,46 @@ class InMemoryDatabase {
         teams: [],
         games: []
       });
+
+      // Default rules data
+      const defaultRules: Omit<Rules, 'id'>[] = [
+        {
+          title: 'Throw Off Rules',
+          content: `At the start of each half, the team who starts with the ball has the opportunity to return a **3-on-1 throw off situation** which involves one returner in the Endzone of his own half and three members of the defending team who must line up as follows;
+          
+**Thrower:** Lines up at Halfway and cannot move until the returner catches the ball, he can then proceed to join his other team mates in trying to tackle the returner.
+
+**Two members of the defending team:** Must line up on their own goal line but as soon as the ball is thrown they can chase down the returner.
+
+**Important:** The ball must go further than 10 yards on the throw off and if the ball goes out of bounds without touching the returning player, the returning team will start their drive 1 yard from the halfway line.
+
+Wherever the runner finishes the play (tackled / out of bounds) is where the offence starts their drive on the ensuing play. Any of the standard flag football penalties apply during this play.`,
+          section: 'throw-off',
+          order: 1,
+        },
+        {
+          title: 'Special Plays',
+          content: `**QB RUN:** Any team can run their QB directly from snap **ONCE per half** and this will be noted on the Scoresheet by the Refereeing Team.
+
+**BULLET BLITZ:** Any team can blitz from anywhere **ONCE per half** and this will be noted on the Scoresheet by the Refereeing Team.`,
+          section: 'special-plays',
+          order: 2,
+        },
+        {
+          title: 'General Notes',
+          content: `• All standard flag football rules apply
+• Referees will track special plays (QB RUN and BULLET BLITZ) on the scoresheet
+• Teams are limited to one QB RUN and one BULLET BLITZ per half
+• Penalties during throw off situations follow standard flag football penalty rules`,
+          section: 'general-notes',
+          order: 3,
+        },
+      ];
+
+      // Create default rules
+      defaultRules.forEach(rule => {
+        this.createRule(rule);
+      });
     }
   }
 
