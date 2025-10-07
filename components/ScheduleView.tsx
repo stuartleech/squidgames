@@ -90,14 +90,14 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
     new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime()
   );
 
-  // Define breaks after each game
-  const getBreakAfterGame = (gameId: number): { duration: number; label: string } | null => {
-    switch (gameId) {
-      case 1: return { duration: 10, label: '10 Minute Changeover' };
-      case 2: return { duration: 20, label: '20 Minute Break' };
-      case 3: return { duration: 10, label: '10 Minute Changeover' };
-      case 4: return { duration: 20, label: '20 Minute Break' };
-      case 5: return { duration: 10, label: '10 Minute Changeover' };
+  // Define breaks after each game (based on index position, not game ID)
+  const getBreakAfterGame = (index: number): { duration: number; label: string } | null => {
+    switch (index) {
+      case 0: return { duration: 10, label: '10 Minute Changeover' }; // After game 1
+      case 1: return { duration: 20, label: '20 Minute Break' }; // After game 2
+      case 2: return { duration: 10, label: '10 Minute Changeover' }; // After game 3
+      case 3: return { duration: 20, label: '20 Minute Break' }; // After game 4
+      case 4: return { duration: 10, label: '10 Minute Changeover' }; // After game 5
       default: return null;
     }
   };
@@ -263,12 +263,12 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                 </div>
                 
                 {/* Break display after game */}
-                {getBreakAfterGame(game.id) && (
+                {getBreakAfterGame(index) && (
                   <div className="bg-gradient-to-r from-krakens-yellow/20 to-krakens-pink/20 border-y border-gray-200">
                     <div className="p-3 sm:p-4 text-center">
                       <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-700">
                         <span>⏸️</span>
-                        <span>{getBreakAfterGame(game.id)?.label}</span>
+                        <span>{getBreakAfterGame(index)?.label}</span>
                       </div>
                     </div>
                   </div>
