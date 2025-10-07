@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { Game } from '@/types';
 import { useState, useEffect } from 'react';
 
@@ -89,6 +90,18 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
     new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime()
   );
 
+  // Define breaks after each game
+  const getBreakAfterGame = (gameId: number): { duration: number; label: string } | null => {
+    switch (gameId) {
+      case 1: return { duration: 10, label: '10 Minute Changeover' };
+      case 2: return { duration: 20, label: '20 Minute Break' };
+      case 3: return { duration: 10, label: '10 Minute Changeover' };
+      case 4: return { duration: 20, label: '20 Minute Break' };
+      case 5: return { duration: 10, label: '10 Minute Changeover' };
+      default: return null;
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Games List */}
@@ -100,7 +113,8 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
         </div>
         
         <div className="divide-y divide-gray-200">
-              {sortedGames.map((game) => (
+              {sortedGames.map((game, index) => (
+                <React.Fragment key={game.id}>
                 <div key={game.id} className="p-3 sm:p-4 hover:bg-gray-50 transition-colors min-h-[80px] sm:min-h-[100px]">
                   {/* Mobile Layout - Stacked */}
                   <div className="sm:hidden">
@@ -159,6 +173,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                     {/* Time, field, ref info at the bottom */}
                     <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-gray-600">
                       <span className="whitespace-nowrap">🕒 {formatTimeRange(game.scheduledTime)}</span>
+                      <span className="whitespace-nowrap">⏱️ 2 x 15 min halfs</span>
                       <span className="whitespace-nowrap">🏟️ Field {game.field}</span>
                       {game.referee && (
                         <span className="whitespace-nowrap">👨‍⚖️ Ref: {game.referee}</span>
@@ -229,6 +244,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                       {/* Time, field, ref info at the bottom */}
                       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600 mt-2">
                         <span>🕒 {formatTimeRange(game.scheduledTime)}</span>
+                        <span>⏱️ 2 x 15 min halfs</span>
                         <span>🏟️ Field {game.field}</span>
                         {game.referee && (
                           <span>👨‍⚖️ Ref: {game.referee}</span>
@@ -245,6 +261,19 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                     </div>
                   </div>
                 </div>
+                
+                {/* Break display after game */}
+                {getBreakAfterGame(game.id) && (
+                  <div className="bg-gradient-to-r from-krakens-yellow/20 to-krakens-pink/20 border-y border-gray-200">
+                    <div className="p-3 sm:p-4 text-center">
+                      <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-700">
+                        <span>⏸️</span>
+                        <span>{getBreakAfterGame(game.id)?.label}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                </React.Fragment>
               ))}
         </div>
       </div>
