@@ -40,7 +40,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
 
   const formatTimeRange = (timeString: string) => {
     const startDate = new Date(timeString);
-    const endDate = new Date(startDate.getTime() + 30 * 60000); // Add 30 minutes
+    const endDate = new Date(startDate.getTime() + 32 * 60000); // Add 32 minutes (30 + 2 min half time)
     
     const startTime = startDate.toLocaleTimeString('en-US', { 
       hour: 'numeric', 
@@ -93,11 +93,11 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
   // Define breaks after each game (based on index position, not game ID)
   const getBreakAfterGame = (index: number): { duration: number; label: string } | null => {
     switch (index) {
-      case 0: return { duration: 10, label: '10 Minute Changeover' }; // After game 1
-      case 1: return { duration: 20, label: '20 Minute Break' }; // After game 2
-      case 2: return { duration: 10, label: '10 Minute Changeover' }; // After game 3
-      case 3: return { duration: 20, label: '20 Minute Break' }; // After game 4
-      case 4: return { duration: 10, label: '10 Minute Changeover' }; // After game 5
+      case 0: return { duration: 8, label: '8 Minute Changeover' }; // After game 1
+      case 1: return { duration: 18, label: '18 Minute Break' }; // After game 2
+      case 2: return { duration: 8, label: '8 Minute Changeover' }; // After game 3
+      case 3: return { duration: 18, label: '18 Minute Break' }; // After game 4
+      case 4: return { duration: 8, label: '8 Minute Changeover' }; // After game 5
       default: return null;
     }
   };
@@ -174,6 +174,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                     <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-gray-600">
                       <span className="whitespace-nowrap">🕒 {formatTimeRange(game.scheduledTime)}</span>
                       <span className="whitespace-nowrap">⏱️ 2 x 15 min halves</span>
+                      <span className="whitespace-nowrap">⏸️ 2 min half time</span>
                       <span className="whitespace-nowrap">🏟️ Field {game.field}</span>
                       {game.referee && (
                         <span className="whitespace-nowrap">👨‍⚖️ Ref: {game.referee}</span>
@@ -245,6 +246,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600 mt-2">
                         <span>🕒 {formatTimeRange(game.scheduledTime)}</span>
                         <span>⏱️ 2 x 15 min halves</span>
+                        <span>⏸️ 2 min half time</span>
                         <span>🏟️ Field {game.field}</span>
                         {game.referee && (
                           <span>👨‍⚖️ Ref: {game.referee}</span>
