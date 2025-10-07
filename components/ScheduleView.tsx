@@ -173,7 +173,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                     {/* Time, field, ref info at the bottom */}
                     <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-gray-600">
                       <span className="whitespace-nowrap">🕒 {formatTimeRange(game.scheduledTime)}</span>
-                      <span className="whitespace-nowrap">⏱️ 2 x 15 min halfs</span>
+                      <span className="whitespace-nowrap">⏱️ 2 x 15 min halves</span>
                       <span className="whitespace-nowrap">🏟️ Field {game.field}</span>
                       {game.referee && (
                         <span className="whitespace-nowrap">👨‍⚖️ Ref: {game.referee}</span>
@@ -244,7 +244,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                       {/* Time, field, ref info at the bottom */}
                       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-gray-600 mt-2">
                         <span>🕒 {formatTimeRange(game.scheduledTime)}</span>
-                        <span>⏱️ 2 x 15 min halfs</span>
+                        <span>⏱️ 2 x 15 min halves</span>
                         <span>🏟️ Field {game.field}</span>
                         {game.referee && (
                           <span>👨‍⚖️ Ref: {game.referee}</span>
