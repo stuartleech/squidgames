@@ -139,7 +139,22 @@ export async function initializeSampleData() {
     });
 
     console.log('✅ Squid Games 2025 data created successfully!');
-    return { message: 'Database initialized successfully', skipped: false };
+    
+    // Verify the data was actually written
+    const verifyTeams = await dbOperations.getAllTeams();
+    const verifyGames = await dbOperations.getAllGames();
+    console.log(`✅ Verification: ${verifyTeams.length} teams and ${verifyGames.length} games in database`);
+    
+    if (verifyTeams.length === 0 || verifyGames.length === 0) {
+      console.error('❌ WARNING: Data was not persisted! Teams:', verifyTeams.length, 'Games:', verifyGames.length);
+    }
+    
+    return { 
+      message: 'Database initialized successfully', 
+      skipped: false,
+      teamsCreated: verifyTeams.length,
+      gamesCreated: verifyGames.length
+    };
   } catch (error) {
     console.error('❌ Error creating sample data:', error);
     throw error;
