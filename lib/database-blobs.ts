@@ -18,21 +18,29 @@ class BlobsDatabase {
 
   private async getData<T>(key: string, defaultValue: T): Promise<T> {
     try {
-      if (!this.store) return defaultValue;
+      if (!this.store) {
+        console.log(`[BlobsDB] Store not initialized, returning default for ${key}`);
+        return defaultValue;
+      }
       const data = await this.store.get(key, { type: 'json' });
+      console.log(`[BlobsDB] Read ${key}:`, data ? `${JSON.stringify(data).length} bytes` : 'null/empty');
       return data || defaultValue;
     } catch (error) {
-      console.error(`Error reading ${key}:`, error);
+      console.error(`[BlobsDB] Error reading ${key}:`, error);
       return defaultValue;
     }
   }
 
   private async setData(key: string, value: any): Promise<void> {
     try {
-      if (!this.store) return;
+      if (!this.store) {
+        console.log(`[BlobsDB] Store not initialized, cannot write ${key}`);
+        return;
+      }
       await this.store.setJSON(key, value);
+      console.log(`[BlobsDB] Wrote ${key}:`, Array.isArray(value) ? `${value.length} items` : 'object');
     } catch (error) {
-      console.error(`Error writing ${key}:`, error);
+      console.error(`[BlobsDB] Error writing ${key}:`, error);
     }
   }
 
