@@ -1,7 +1,14 @@
 import { Team, Game, Tournament, Rules } from '@/types';
 
 // Check if we're in a serverless environment (Netlify or Vercel)
-const isNetlify = !!process.env.NETLIFY;
+// Netlify sets multiple environment variables, check for any of them
+const isNetlify = !!(
+  process.env.NETLIFY || 
+  process.env.NETLIFY_DEV || 
+  process.env.CONTEXT ||
+  process.env.DEPLOY_URL ||
+  process.env.SITE_NAME
+);
 const isVercel = !!process.env.VERCEL;
 const isLocal = !isNetlify && !isVercel;
 
@@ -9,7 +16,8 @@ console.log('[Database] Environment detection:', {
   isNetlify,
   isVercel,
   isLocal,
-  NETLIFY: process.env.NETLIFY,
+  CONTEXT: process.env.CONTEXT,
+  DEPLOY_URL: process.env.DEPLOY_URL ? 'set' : 'unset',
   NODE_ENV: process.env.NODE_ENV
 });
 
