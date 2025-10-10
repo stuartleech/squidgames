@@ -198,30 +198,39 @@ class BlobsDatabase {
   }
 }
 
-// Create singleton instance
-const blobsDb = new BlobsDatabase();
+// Create singleton instance - but recreate for each invocation in serverless
+// This ensures we always have a fresh store connection
+let blobsDb: BlobsDatabase | null = null;
+
+function getBlobsDb() {
+  if (!blobsDb) {
+    console.log('[BlobsDB] Creating new database instance');
+    blobsDb = new BlobsDatabase();
+  }
+  return blobsDb;
+}
 
 // Export operations object matching the interface
 export const dbOperations = {
-  createTeam: (team: Omit<Team, 'id'>) => blobsDb.createTeam(team),
-  getAllTeams: () => blobsDb.getAllTeams(),
-  getTeamById: (id: number) => blobsDb.getTeamById(id),
-  updateTeam: (id: number, updates: Partial<Team>) => blobsDb.updateTeam(id, updates),
-  deleteTeam: (id: number) => blobsDb.deleteTeam(id),
+  createTeam: (team: Omit<Team, 'id'>) => getBlobsDb().createTeam(team),
+  getAllTeams: () => getBlobsDb().getAllTeams(),
+  getTeamById: (id: number) => getBlobsDb().getTeamById(id),
+  updateTeam: (id: number, updates: Partial<Team>) => getBlobsDb().updateTeam(id, updates),
+  deleteTeam: (id: number) => getBlobsDb().deleteTeam(id),
   
-  createGame: (game: Omit<Game, 'id'>) => blobsDb.createGame(game),
-  getAllGames: () => blobsDb.getAllGames(),
-  getGameById: (id: number) => blobsDb.getGameById(id),
-  updateGame: (id: number, updates: Partial<Game>) => blobsDb.updateGame(id, updates),
-  deleteGame: (id: number) => blobsDb.deleteGame(id),
+  createGame: (game: Omit<Game, 'id'>) => getBlobsDb().createGame(game),
+  getAllGames: () => getBlobsDb().getAllGames(),
+  getGameById: (id: number) => getBlobsDb().getGameById(id),
+  updateGame: (id: number, updates: Partial<Game>) => getBlobsDb().updateGame(id, updates),
+  deleteGame: (id: number) => getBlobsDb().deleteGame(id),
   
-  createTournament: (tournament: Omit<Tournament, 'id'>) => blobsDb.createTournament(tournament),
-  getAllTournaments: () => blobsDb.getAllTournaments(),
+  createTournament: (tournament: Omit<Tournament, 'id'>) => getBlobsDb().createTournament(tournament),
+  getAllTournaments: () => getBlobsDb().getAllTournaments(),
   
-  createRule: (rule: Omit<Rules, 'id'>) => blobsDb.createRule(rule),
-  getAllRules: () => blobsDb.getAllRules(),
-  getRuleById: (id: number) => blobsDb.getRuleById(id),
-  updateRule: (id: number, updates: Partial<Rules>) => blobsDb.updateRule(id, updates),
-  deleteRule: (id: number) => blobsDb.deleteRule(id),
+  createRule: (rule: Omit<Rules, 'id'>) => getBlobsDb().createRule(rule),
+  getAllRules: () => getBlobsDb().getAllRules(),
+  getRuleById: (id: number) => getBlobsDb().getRuleById(id),
+  updateRule: (id: number, updates: Partial<Rules>) => getBlobsDb().updateRule(id, updates),
+  deleteRule: (id: number) => getBlobsDb().deleteRule(id),
 };
 
