@@ -20,12 +20,27 @@ interface StandingsTeam extends Team {
   pointDifferential: number;
 }
 
-interface StandingsViewProps {
-  teams: Team[];
-}
+export default function StandingsView() {
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-export default function StandingsView({ teams: initialTeams }: StandingsViewProps) {
-  const [teams, setTeams] = useState(initialTeams);
+  // Initial fetch
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await fetch('/api/teams');
+        const teamsData = await response.json();
+        setTeams(teamsData);
+        console.log('[Standings] Fetched teams:', teamsData);
+      } catch (error) {
+        console.error('Failed to fetch teams:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchTeams();
+  }, []);
 
   // Poll for team updates every 2 seconds
   useEffect(() => {
@@ -34,6 +49,7 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
         const response = await fetch('/api/teams');
         const updatedTeams = await response.json();
         setTeams(updatedTeams);
+        console.log('[Standings] Updated teams:', updatedTeams);
       } catch (error) {
         console.error('Failed to fetch updated teams:', error);
       }

@@ -4,12 +4,26 @@ import React from 'react';
 import { Game } from '@/types';
 import { useState, useEffect } from 'react';
 
-interface ScheduleViewProps {
-  games: any[];
-}
+export default function ScheduleView() {
+  const [games, setGames] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-export default function ScheduleView({ games: initialGames }: ScheduleViewProps) {
-  const [games, setGames] = useState(initialGames);
+  // Initial fetch
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const response = await fetch('/api/games');
+        const gamesData = await response.json();
+        setGames(gamesData);
+      } catch (error) {
+        console.error('Failed to fetch games:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchGames();
+  }, []);
 
   // Poll for updates every 2 seconds
   useEffect(() => {

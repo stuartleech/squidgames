@@ -6,8 +6,6 @@ import StandingsView from '@/components/StandingsView';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'schedule' | 'standings' | 'rules'>('schedule');
-  const [games, setGames] = useState<any[]>([]);
-  const [teams, setTeams] = useState<any[]>([]);
   const [rules, setRules] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -25,47 +23,33 @@ export default function Home() {
     localStorage.setItem('activeTab', activeTab);
   }, [activeTab]);
 
+  // Only fetch rules here - games and teams are fetched by their own components
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRules = async () => {
       setIsLoading(true);
       setHasError(false);
       
       try {
-        const [gamesResponse, teamsResponse, rulesResponse] = await Promise.all([
-          fetch('/api/games'),
-          fetch('/api/teams'),
-          fetch('/api/rules')
-        ]);
+        const rulesResponse = await fetch('/api/rules');
         
-        if (gamesResponse.ok && teamsResponse.ok && rulesResponse.ok) {
-          const gamesData = await gamesResponse.json();
-          const teamsData = await teamsResponse.json();
+        if (rulesResponse.ok) {
           const rulesData = await rulesResponse.json();
-          
-          setGames(gamesData);
-          setTeams(teamsData);
           setRules(rulesData);
         } else {
-          console.error('Failed to fetch data:', gamesResponse.status, teamsResponse.status, rulesResponse.status);
+          console.error('Failed to fetch rules:', rulesResponse.status);
           setHasError(true);
-          // Set empty arrays as fallback
-          setGames([]);
-          setTeams([]);
           setRules([]);
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error('Failed to fetch rules:', error);
         setHasError(true);
-        // Set empty arrays as fallback
-        setGames([]);
-        setTeams([]);
         setRules([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
+    fetchRules();
   }, []);
 
   return (
@@ -147,8 +131,8 @@ export default function Home() {
           </div>
         ) : (
           <>
-            {activeTab === 'schedule' && <ScheduleView games={games} />}
-            {activeTab === 'standings' && <StandingsView teams={teams} />}
+            {activeTab === 'schedule' && <ScheduleView />}
+            {activeTab === 'standings' && <StandingsView />}
             {activeTab === 'rules' && (
               <div className="max-w-6xl mx-auto">
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden">
