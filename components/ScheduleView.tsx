@@ -11,11 +11,8 @@ interface ScheduleViewProps {
 export default function ScheduleView({ games: initialGames }: ScheduleViewProps) {
   const [games, setGames] = useState(initialGames);
 
-  // Poll for updates every 500ms when there are active timers, otherwise every 5 seconds
+  // Poll for updates every 5 seconds
   useEffect(() => {
-    const hasActiveTimers = games.some(game => game.status === 'in-progress' && game.isTimerRunning === 1);
-    const pollInterval = hasActiveTimers ? 500 : 5000;
-    
     const interval = setInterval(async () => {
       try {
         const response = await fetch('/api/games');
@@ -24,7 +21,7 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
       } catch (error) {
         console.error('Failed to fetch updated games:', error);
       }
-    }, pollInterval);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [games]);
@@ -64,12 +61,6 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
       month: 'short',
       day: 'numeric'
     });
-  };
-
-  const formatCountdownTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const getStatusColor = (status: string) => {
@@ -178,14 +169,6 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                       {game.referee && (
                         <span className="whitespace-nowrap">👨‍⚖️ Ref: {game.referee}</span>
                       )}
-                      {game.status === 'in-progress' && (
-                        <>
-                          <span className="whitespace-nowrap">{game.half === 1 ? '1st Half' : '2nd Half'}</span>
-                          <span className={`font-medium whitespace-nowrap ${game.isTimerRunning === 1 ? 'text-green-600 animate-pulse' : 'text-red-600'}`}>
-                            {formatCountdownTime(game.timeRemaining)}
-                          </span>
-                        </>
-                      )}
                     </div>
                   </div>
 
@@ -248,14 +231,6 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
                         <span>⏸️ 2 min half time</span>
                         {game.referee && (
                           <span>👨‍⚖️ Ref: {game.referee}</span>
-                        )}
-                        {game.status === 'in-progress' && (
-                          <>
-                            <span>{game.half === 1 ? '1st Half' : '2nd Half'}</span>
-                            <span className={`font-medium ${game.isTimerRunning === 1 ? 'text-green-600 animate-pulse' : 'text-red-600'}`}>
-                              {formatCountdownTime(game.timeRemaining)}
-                            </span>
-                          </>
                         )}
                       </div>
                     </div>

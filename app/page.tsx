@@ -12,6 +12,19 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  // Restore active tab from localStorage on mount
+  useEffect(() => {
+    const savedTab = localStorage.getItem('activeTab');
+    if (savedTab && (savedTab === 'schedule' || savedTab === 'standings' || savedTab === 'rules')) {
+      setActiveTab(savedTab as 'schedule' | 'standings' | 'rules');
+    }
+  }, []);
+
+  // Save active tab to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);

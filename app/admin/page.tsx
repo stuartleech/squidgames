@@ -45,9 +45,6 @@ export default function AdminPanel() {
   const [homeScore, setHomeScore] = useState('');
   const [awayScore, setAwayScore] = useState('');
   const [status, setStatus] = useState('scheduled');
-  const [half, setHalf] = useState(1);
-  const [timeRemaining, setTimeRemaining] = useState(900);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [referee, setReferee] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -74,16 +71,16 @@ export default function AdminPanel() {
     }
   }, [isAuthenticated]);
 
-  // Poll for updates every 500ms when timer is running, otherwise every 2 seconds
+  // Poll for updates every 5 seconds
   useEffect(() => {
     if (!isAuthenticated) return;
     
     const interval = setInterval(() => {
       fetchGames();
-    }, isTimerRunning ? 500 : 2000);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [isTimerRunning, isAuthenticated]);
+  }, [isAuthenticated]);
 
   const handleLogin = () => {
     if (password === '_Squid-Games-2025!_') {
@@ -110,15 +107,6 @@ export default function AdminPanel() {
       const response = await fetch('/api/games');
       const gamesData = await response.json();
       setGames(gamesData);
-      
-      // Update selected game's timer if it's still selected
-      if (selectedGame) {
-        const updatedGame = gamesData.find((g: any) => g.id === selectedGame.id);
-        if (updatedGame) {
-          setTimeRemaining(updatedGame.timeRemaining || 900);
-          setIsTimerRunning(updatedGame.isTimerRunning === 1);
-        }
-      }
     } catch (error) {
       console.error('Failed to fetch games:', error);
     }
@@ -149,9 +137,6 @@ export default function AdminPanel() {
     setHomeScore(game.homeScore?.toString() || '');
     setAwayScore(game.awayScore?.toString() || '');
     setStatus(game.status);
-    setHalf(game.half || 1);
-    setTimeRemaining(game.timeRemaining || 900);
-    setIsTimerRunning(game.isTimerRunning === 1);
     setReferee(game.referee || '');
     setShowCreateForm(false);
   };
@@ -391,12 +376,6 @@ export default function AdminPanel() {
     }
   };
 
-  const formatCountdownTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
   const handleUpdateGame = async () => {
     if (!selectedGame) return;
 
@@ -411,9 +390,6 @@ export default function AdminPanel() {
           homeScore: homeScore ? parseInt(homeScore) : null,
           awayScore: awayScore ? parseInt(awayScore) : null,
           status,
-          half,
-          timeRemaining,
-          isTimerRunning,
           referee,
         }),
       });
@@ -907,54 +883,6 @@ export default function AdminPanel() {
                         </select>
                       </div>
 
-                      {status === 'in-progress' && (
-                        <>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Half
-                            </label>
-                            <select
-                              value={half}
-                              onChange={(e) => {
-                                const newHalf = parseInt(e.target.value);
-                                setHalf(newHalf);
-                                setTimeRemaining(900); // Reset to 15 minutes for new half
-                              }}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-krakens-pink"
-                            >
-                              <option value={1}>1st Half</option>
-                              <option value={2}>2nd Half</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Time Remaining: {formatCountdownTime(timeRemaining)}
-                            </label>
-                            <div className="flex space-x-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => setIsTimerRunning(!isTimerRunning)}
-                                    className={`flex-1 py-2 px-4 rounded-md font-medium ${
-                                      isTimerRunning
-                                        ? 'bg-green-600 text-white hover:bg-green-700'
-                                        : 'bg-red-600 text-white hover:bg-red-700'
-                                    }`}
-                                  >
-                                    {isTimerRunning ? 'Stop Timer' : 'Start Timer'}
-                                  </button>
-                              <button
-                                type="button"
-                                onClick={() => setTimeRemaining(900)}
-                                className="flex-1 py-2 px-4 rounded-md font-medium bg-gray-600 text-white hover:bg-gray-700"
-                              >
-                                Reset to 15:00
-                              </button>
-                            </div>
-                          </div>
-                        </>
-                      )}
-
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1017,8 +945,6 @@ export default function AdminPanel() {
                         <button
                           onClick={() => {
                             setStatus('in-progress');
-                            setTimeRemaining(900);
-                            setIsTimerRunning(false);
                           }}
                           className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
                         >
