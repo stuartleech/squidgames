@@ -5,18 +5,29 @@ const isNetlify = !!process.env.NETLIFY;
 const isVercel = !!process.env.VERCEL;
 const isLocal = !isNetlify && !isVercel;
 
+console.log('[Database] Environment detection:', {
+  isNetlify,
+  isVercel,
+  isLocal,
+  NETLIFY: process.env.NETLIFY,
+  NODE_ENV: process.env.NODE_ENV
+});
+
 let dbOperations: any;
 
 if (isNetlify) {
   // Use Netlify Blobs for persistent storage on Netlify
+  console.log('[Database] Loading Netlify Blobs database');
   const { dbOperations: blobsOps } = require('./database-blobs');
   dbOperations = blobsOps;
 } else if (isVercel) {
   // Use in-memory database for Vercel (or configure Vercel Postgres)
+  console.log('[Database] Loading Vercel in-memory database');
   const { dbOperations: serverlessOps } = require('./database-serverless');
   dbOperations = serverlessOps;
 } else {
   // Use SQLite for local development
+  console.log('[Database] Loading SQLite database for local development');
   try {
     const Database = require('better-sqlite3');
     const db = new Database('tournament.db');
