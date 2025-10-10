@@ -11,7 +11,7 @@ interface ScheduleViewProps {
 export default function ScheduleView({ games: initialGames }: ScheduleViewProps) {
   const [games, setGames] = useState(initialGames);
 
-  // Poll for updates every 5 seconds
+  // Poll for updates every 2 seconds
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -21,10 +21,10 @@ export default function ScheduleView({ games: initialGames }: ScheduleViewProps)
       } catch (error) {
         console.error('Failed to fetch updated games:', error);
       }
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [games]);
+  }, []); // Empty dependency array so interval runs consistently
 
   const formatTime = (timeString: string) => {
     const date = new Date(timeString);
