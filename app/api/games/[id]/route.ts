@@ -11,7 +11,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     // Delete the game
-    const result = dbOperations.deleteGame(gameId);
+    const result = await dbOperations.deleteGame(gameId);
     
     if (result.changes === 0) {
       return NextResponse.json({ error: 'Game not found' }, { status: 404 });
@@ -34,7 +34,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     // Get the game BEFORE updating to track previous scores
-    const gameBeforeUpdate = dbOperations.getGameById(gameId);
+    const gameBeforeUpdate = await dbOperations.getGameById(gameId);
     if (!gameBeforeUpdate) {
       return NextResponse.json({ error: 'Game not found' }, { status: 404 });
     }
@@ -49,7 +49,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (isTimerRunning !== undefined) updateData.isTimerRunning = isTimerRunning ? 1 : 0;
     if (referee !== undefined) updateData.referee = referee;
 
-    dbOperations.updateGame(gameId, updateData);
+    await dbOperations.updateGame(gameId, updateData);
 
     // Handle timer management
     if (isTimerRunning !== undefined) {
@@ -62,8 +62,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     // If scores are provided and game is completed, update team statistics
     if (homeScore !== undefined && awayScore !== undefined && status === 'completed') {
-      const homeTeam = dbOperations.getTeamById(gameBeforeUpdate.homeTeamId);
-      const awayTeam = dbOperations.getTeamById(gameBeforeUpdate.awayTeamId);
+      const homeTeam = await dbOperations.getTeamById(gameBeforeUpdate.homeTeamId);
+      const awayTeam = await dbOperations.getTeamById(gameBeforeUpdate.awayTeamId);
 
       if (homeTeam && awayTeam) {
         // Get previous scores (or 0 if null)
@@ -125,7 +125,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         }
 
         // Update home team
-        dbOperations.updateTeam(gameBeforeUpdate.homeTeamId, {
+        await dbOperations.updateTeam(gameBeforeUpdate.homeTeamId, {
           wins: newHomeWins,
           losses: newHomeLosses,
           pointsFor: newHomePointsFor,
@@ -133,7 +133,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         });
 
         // Update away team
-        dbOperations.updateTeam(gameBeforeUpdate.awayTeamId, {
+        await dbOperations.updateTeam(gameBeforeUpdate.awayTeamId, {
           wins: newAwayWins,
           losses: newAwayLosses,
           pointsFor: newAwayPointsFor,
@@ -142,7 +142,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       }
     }
 
-    const updatedGame = dbOperations.getGameById(gameId);
+    const updatedGame = await dbOperations.getGameById(gameId);
     return NextResponse.json(updatedGame);
   } catch (error) {
     console.error('Error updating game:', error);

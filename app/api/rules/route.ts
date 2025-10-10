@@ -3,7 +3,7 @@ import { dbOperations } from '@/lib/database';
 
 export async function GET() {
   try {
-    const rules = dbOperations.getAllRules();
+    const rules = await dbOperations.getAllRules();
     return NextResponse.json(rules);
   } catch (error) {
     console.error('Error fetching rules:', error);
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const result = dbOperations.createRule({
+    const result = await dbOperations.createRule({
       title,
       content,
       section,

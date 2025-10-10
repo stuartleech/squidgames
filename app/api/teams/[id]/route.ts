@@ -10,13 +10,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Team ID is required' }, { status: 400 });
     }
 
-    const result = dbOperations.updateTeam(teamId, teamData);
+    const result = await dbOperations.updateTeam(teamId, teamData);
     
     if (result.changes === 0) {
       return NextResponse.json({ error: 'Team not found' }, { status: 404 });
     }
 
-    const updatedTeam = dbOperations.getTeamById(teamId);
+    const updatedTeam = await dbOperations.getTeamById(teamId);
     return NextResponse.json(updatedTeam);
   } catch (error) {
     console.error('Error updating team:', error);
@@ -32,7 +32,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Team ID is required' }, { status: 400 });
     }
 
-    const result = dbOperations.deleteTeam(teamId);
+    const result = await dbOperations.deleteTeam(teamId);
     
     if (result.changes === 0) {
       return NextResponse.json({ error: 'Team not found' }, { status: 404 });

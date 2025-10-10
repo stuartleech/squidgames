@@ -3,7 +3,7 @@ import { dbOperations } from '@/lib/database';
 
 export async function GET() {
   try {
-    const teams = dbOperations.getAllTeams();
+    const teams = await dbOperations.getAllTeams();
     return NextResponse.json(teams);
   } catch (error) {
     console.error('Error fetching teams:', error);
@@ -14,7 +14,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const teamData = await request.json();
-    const result = dbOperations.createTeam(teamData);
+    const result = await dbOperations.createTeam(teamData);
     return NextResponse.json({ id: result.lastInsertRowid, ...teamData });
   } catch (error) {
     console.error('Error creating team:', error);

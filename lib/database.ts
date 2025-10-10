@@ -1,12 +1,18 @@
 import { Team, Game, Tournament, Rules } from '@/types';
 
-// Check if we're in a serverless environment
-const isServerless = process.env.VERCEL || process.env.NETLIFY || process.env.NODE_ENV === 'production';
+// Check if we're in a serverless environment (Netlify or Vercel)
+const isNetlify = !!process.env.NETLIFY;
+const isVercel = !!process.env.VERCEL;
+const isLocal = !isNetlify && !isVercel;
 
 let dbOperations: any;
 
-if (isServerless) {
-  // Use in-memory database for serverless deployment
+if (isNetlify) {
+  // Use Netlify Blobs for persistent storage on Netlify
+  const { dbOperations: blobsOps } = require('./database-blobs');
+  dbOperations = blobsOps;
+} else if (isVercel) {
+  // Use in-memory database for Vercel (or configure Vercel Postgres)
   const { dbOperations: serverlessOps } = require('./database-serverless');
   dbOperations = serverlessOps;
 } else {

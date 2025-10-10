@@ -9,7 +9,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Rule ID is required' }, { status: 400 });
     }
 
-    const rule = dbOperations.getRuleById(ruleId);
+    const rule = await dbOperations.getRuleById(ruleId);
     
     if (!rule) {
       return NextResponse.json({ error: 'Rule not found' }, { status: 404 });
@@ -37,7 +37,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (section !== undefined) updateData.section = section;
     if (order !== undefined) updateData.order = order;
 
-    const result = dbOperations.updateRule(ruleId, updateData);
+    const result = await dbOperations.updateRule(ruleId, updateData);
 
     if (result.changes === 0) {
       return NextResponse.json({ error: 'Rule not found' }, { status: 404 });
@@ -58,7 +58,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Rule ID is required' }, { status: 400 });
     }
 
-    const result = dbOperations.deleteRule(ruleId);
+    const result = await dbOperations.deleteRule(ruleId);
     
     if (result.changes === 0) {
       return NextResponse.json({ error: 'Rule not found' }, { status: 404 });
