@@ -39,19 +39,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Game not found' }, { status: 404 });
     }
 
-    // Update the game
-    const updateData: any = {};
-    if (homeScore !== undefined) updateData.homeScore = homeScore;
-    if (awayScore !== undefined) updateData.awayScore = awayScore;
-    if (status) updateData.status = status;
-    if (half) updateData.half = half;
-    if (timeRemaining !== undefined) updateData.timeRemaining = timeRemaining;
-    if (isTimerRunning !== undefined) updateData.isTimerRunning = isTimerRunning ? 1 : 0;
-    if (referee !== undefined) updateData.referee = referee;
-
-    await dbOperations.updateGame(gameId, updateData);
-
-    // Handle timer management
+    // Handle timer management first
     if (isTimerRunning !== undefined) {
       if (isTimerRunning && status === 'in-progress') {
         gameTimer.startTimer(gameId);
@@ -60,8 +48,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       }
     }
 
-    // If scores are provided and game is completed, update team statistics
+    // If scores are provided and game is completed, update team statistics FIRST
     if (homeScore !== undefined && awayScore !== undefined && status === 'completed') {
+      console.log(`[Standings Update] Processing game ${gameId}: ${homeScore}-${awayScore}, status: ${status}`);
       const homeTeam = await dbOperations.getTeamById(gameBeforeUpdate.homeTeamId);
       const awayTeam = await dbOperations.getTeamById(gameBeforeUpdate.awayTeamId);
 
@@ -125,6 +114,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         }
 
         // Update home team
+        console.log(`[Standings Update] Updating home team ${gameBeforeUpdate.homeTeamId}:`, {
+          wins: newHomeWins,
+          losses: newHomeLosses,
+          pointsFor: newHomePointsFor,
+          pointsAgainst: newHomePointsAgainst,
+        });
         await dbOperations.updateTeam(gameBeforeUpdate.homeTeamId, {
           wins: newHomeWins,
           losses: newHomeLosses,
@@ -133,16 +128,37 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         });
 
         // Update away team
+        console.log(`[Standings Update] Updating away team ${gameBeforeUpdate.awayTeamId}:`, {
+          wins: newAwayWins,
+          losses: newAwayLosses,
+          pointsFor: newAwayPointsFor,
+          pointsAgainst: newAwayPointsAgainst,
+        });
         await dbOperations.updateTeam(gameBeforeUpdate.awayTeamId, {
           wins: newAwayWins,
           losses: newAwayLosses,
           pointsFor: newAwayPointsFor,
           pointsAgainst: newAwayPointsAgainst,
         });
+      } else {
+        console.log('[Standings Update] ERROR: Could not find one or both teams!');
       }
     }
 
+    // Now update the game itself
+    const updateData: any = {};
+    if (homeScore !== undefined) updateData.homeScore = homeScore;
+    if (awayScore !== undefined) updateData.awayScore = awayScore;
+    if (status) updateData.status = status;
+    if (half) updateData.half = half;
+    if (timeRemaining !== undefined) updateData.timeRemaining = timeRemaining;
+    if (isTimerRunning !== undefined) updateData.isTimerRunning = isTimerRunning ? 1 : 0;
+    if (referee !== undefined) updateData.referee = referee;
+
+    await dbOperations.updateGame(gameId, updateData);
+
     const updatedGame = await dbOperations.getGameById(gameId);
+    console.log('[Standings Update] Game update complete, returning:', updatedGame);
     return NextResponse.json(updatedGame);
   } catch (error) {
     console.error('Error updating game:', error);
