@@ -21,7 +21,7 @@ const sampleGames = [
     half: 1,
     timeRemaining: 900,
     isTimerRunning: 0,
-    referee: 'Solent Red Storm'
+    referee: 'Kent Exiles'
   },
   {
     homeTeamId: 4, // Solent Red Storm
@@ -73,7 +73,7 @@ const sampleGames = [
     half: 1,
     timeRemaining: 900,
     isTimerRunning: 0,
-    referee: 'Margate Krakens (neutral)'
+    referee: 'Solent Red Storm'
   },
   {
     homeTeamId: 1, // Margate Krakens
@@ -86,7 +86,7 @@ const sampleGames = [
     half: 1,
     timeRemaining: 900,
     isTimerRunning: 0,
-    referee: 'Exiles Black'
+    referee: 'Kent Exiles'
   }
 ];
 
