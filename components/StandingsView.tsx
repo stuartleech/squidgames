@@ -27,7 +27,7 @@ interface StandingsViewProps {
 export default function StandingsView({ teams: initialTeams }: StandingsViewProps) {
   const [teams, setTeams] = useState(initialTeams);
 
-  // Poll for team updates every 5 seconds
+  // Poll for team updates every 2 seconds
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -37,7 +37,7 @@ export default function StandingsView({ teams: initialTeams }: StandingsViewProp
       } catch (error) {
         console.error('Failed to fetch updated teams:', error);
       }
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);

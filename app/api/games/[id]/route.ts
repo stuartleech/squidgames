@@ -33,6 +33,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Game ID is required' }, { status: 400 });
     }
 
+    // Get the game BEFORE updating to track previous scores
+    const gameBeforeUpdate = dbOperations.getGameById(gameId);
+    if (!gameBeforeUpdate) {
+      return NextResponse.json({ error: 'Game not found' }, { status: 404 });
+    }
+
     // Update the game
     const updateData: any = {};
     if (homeScore !== undefined) updateData.homeScore = homeScore;
@@ -43,37 +49,48 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (isTimerRunning !== undefined) updateData.isTimerRunning = isTimerRunning ? 1 : 0;
     if (referee !== undefined) updateData.referee = referee;
 
-        dbOperations.updateGame(gameId, updateData);
+    dbOperations.updateGame(gameId, updateData);
 
-        // Handle timer management
-        if (isTimerRunning !== undefined) {
-          if (isTimerRunning && status === 'in-progress') {
-            gameTimer.startTimer(gameId);
-          } else {
-            gameTimer.stopTimer(gameId);
-          }
-        }
+    // Handle timer management
+    if (isTimerRunning !== undefined) {
+      if (isTimerRunning && status === 'in-progress') {
+        gameTimer.startTimer(gameId);
+      } else {
+        gameTimer.stopTimer(gameId);
+      }
+    }
 
-        // If scores are provided, update team statistics
-    if (homeScore !== undefined && awayScore !== undefined) {
-      const game = dbOperations.getGameById(gameId);
-      if (game) {
-        const homeTeam = dbOperations.getTeamById(game.homeTeamId);
-        const awayTeam = dbOperations.getTeamById(game.awayTeamId);
+    // If scores are provided and game is completed, update team statistics
+    if (homeScore !== undefined && awayScore !== undefined && status === 'completed') {
+      const homeTeam = dbOperations.getTeamById(gameBeforeUpdate.homeTeamId);
+      const awayTeam = dbOperations.getTeamById(gameBeforeUpdate.awayTeamId);
 
-        if (homeTeam && awayTeam) {
-          // Update points for/against
-          const newHomePointsFor = homeTeam.pointsFor + homeScore;
-          const newHomePointsAgainst = homeTeam.pointsAgainst + awayScore;
-          const newAwayPointsFor = awayTeam.pointsFor + awayScore;
-          const newAwayPointsAgainst = awayTeam.pointsAgainst + homeScore;
+      if (homeTeam && awayTeam) {
+        // Get previous scores (or 0 if null)
+        const prevHomeScore = gameBeforeUpdate.homeScore || 0;
+        const prevAwayScore = gameBeforeUpdate.awayScore || 0;
+        
+        // Calculate the difference in scores
+        const homeScoreDiff = homeScore - prevHomeScore;
+        const awayScoreDiff = awayScore - prevAwayScore;
 
-          // Determine winner and update wins/losses
-          let newHomeWins = homeTeam.wins;
-          let newHomeLosses = homeTeam.losses;
-          let newAwayWins = awayTeam.wins;
-          let newAwayLosses = awayTeam.losses;
+        // Check if this was previously completed (to avoid double-counting wins/losses)
+        const wasPreviouslyCompleted = gameBeforeUpdate.status === 'completed';
 
+        // Update points for/against with the difference
+        const newHomePointsFor = homeTeam.pointsFor + homeScoreDiff;
+        const newHomePointsAgainst = homeTeam.pointsAgainst + awayScoreDiff;
+        const newAwayPointsFor = awayTeam.pointsFor + awayScoreDiff;
+        const newAwayPointsAgainst = awayTeam.pointsAgainst + homeScoreDiff;
+
+        // Calculate wins/losses
+        let newHomeWins = homeTeam.wins;
+        let newHomeLosses = homeTeam.losses;
+        let newAwayWins = awayTeam.wins;
+        let newAwayLosses = awayTeam.losses;
+
+        if (!wasPreviouslyCompleted) {
+          // Only update wins/losses if game wasn't previously completed
           if (homeScore > awayScore) {
             newHomeWins += 1;
             newAwayLosses += 1;
@@ -81,23 +98,47 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             newAwayWins += 1;
             newHomeLosses += 1;
           }
+        } else {
+          // Game was already completed, check if winner changed
+          const prevHomeWon = prevHomeScore > prevAwayScore;
+          const prevAwayWon = prevAwayScore > prevHomeScore;
+          const newHomeWon = homeScore > awayScore;
+          const newAwayWon = awayScore > homeScore;
 
-          // Update home team
-          dbOperations.updateTeam(game.homeTeamId, {
-            wins: newHomeWins,
-            losses: newHomeLosses,
-            pointsFor: newHomePointsFor,
-            pointsAgainst: newHomePointsAgainst,
-          });
+          // Reverse previous result
+          if (prevHomeWon && !newHomeWon) {
+            newHomeWins -= 1;
+            newAwayLosses -= 1;
+          } else if (prevAwayWon && !newAwayWon) {
+            newAwayWins -= 1;
+            newHomeLosses -= 1;
+          }
 
-          // Update away team
-          dbOperations.updateTeam(game.awayTeamId, {
-            wins: newAwayWins,
-            losses: newAwayLosses,
-            pointsFor: newAwayPointsFor,
-            pointsAgainst: newAwayPointsAgainst,
-          });
+          // Apply new result
+          if (newHomeWon) {
+            newHomeWins += 1;
+            newAwayLosses += 1;
+          } else if (newAwayWon) {
+            newAwayWins += 1;
+            newHomeLosses += 1;
+          }
         }
+
+        // Update home team
+        dbOperations.updateTeam(gameBeforeUpdate.homeTeamId, {
+          wins: newHomeWins,
+          losses: newHomeLosses,
+          pointsFor: newHomePointsFor,
+          pointsAgainst: newHomePointsAgainst,
+        });
+
+        // Update away team
+        dbOperations.updateTeam(gameBeforeUpdate.awayTeamId, {
+          wins: newAwayWins,
+          losses: newAwayLosses,
+          pointsFor: newAwayPointsFor,
+          pointsAgainst: newAwayPointsAgainst,
+        });
       }
     }
 
