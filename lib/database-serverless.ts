@@ -9,6 +9,9 @@ class InMemoryDatabase {
   private nextId = 1;
 
   constructor() {
+    // ⚠️ WARNING: This is an IN-MEMORY database that resets on every serverless function call!
+    // Data will NOT persist between requests on Netlify.
+    // For production use, migrate to a persistent database (Vercel Postgres, Supabase, etc.)
     this.initializeSampleData();
   }
 
