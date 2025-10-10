@@ -90,15 +90,24 @@ const sampleGames = [
   }
 ];
 
-export function initializeSampleData() {
+export async function initializeSampleData() {
   try {
-    // Always create sample data for now
-    console.log('Initializing sample data...');
+    // Check if data already exists - DON'T overwrite!
+    const existingTeams = await dbOperations.getAllTeams();
+    const existingGames = await dbOperations.getAllGames();
+    
+    if (existingTeams.length > 0 || existingGames.length > 0) {
+      console.log('⚠️ Database already has data! Skipping initialization to prevent data loss.');
+      console.log(`Found ${existingTeams.length} teams and ${existingGames.length} games.`);
+      return { message: 'Database already initialized', skipped: true };
+    }
+
+    console.log('✅ Database is empty. Initializing sample data...');
 
     // Create sample teams
     console.log('Creating sample teams for Squid Games 2025...');
-    sampleTeams.forEach(team => {
-      dbOperations.createTeam({
+    for (const team of sampleTeams) {
+      await dbOperations.createTeam({
         name: team.name,
         color: team.color,
         wins: 0,
@@ -106,30 +115,32 @@ export function initializeSampleData() {
         pointsFor: 0,
         pointsAgainst: 0
       });
-    });
+    }
 
     // Create sample games
     console.log('Creating sample games for Saturday, October 11th, 2025...');
-    sampleGames.forEach((game, index) => {
+    for (const [index, game] of sampleGames.entries()) {
       try {
         console.log(`Creating game ${index + 1}:`, game);
-        const result = dbOperations.createGame(game);
+        const result = await dbOperations.createGame(game);
         console.log(`Game ${index + 1} created:`, result);
       } catch (error) {
         console.error(`Error creating game ${index + 1}:`, error);
       }
-    });
+    }
 
     // Create tournament
     console.log('Creating Squid Games 2025 tournament...');
-    dbOperations.createTournament({
+    await dbOperations.createTournament({
       name: 'Squid Games 2025',
       startDate: '2025-10-11',
       endDate: '2025-10-11'
     });
 
-    console.log('Squid Games 2025 data created successfully!');
+    console.log('✅ Squid Games 2025 data created successfully!');
+    return { message: 'Database initialized successfully', skipped: false };
   } catch (error) {
-    console.error('Error creating sample data:', error);
+    console.error('❌ Error creating sample data:', error);
+    throw error;
   }
 }
