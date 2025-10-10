@@ -6,10 +6,13 @@ class BlobsDatabase {
   private store: any;
 
   constructor() {
-    // Initialize store - Netlify automatically provides credentials in serverless functions
+    // Initialize store with STRONG consistency for immediate read-after-write
     try {
-      this.store = getStore('squidgames-db');
-      console.log('[BlobsDB] Store initialized successfully');
+      this.store = getStore({
+        name: 'squidgames-db',
+        consistency: 'strong' // Ensures writes are immediately visible
+      });
+      console.log('[BlobsDB] Store initialized successfully with STRONG consistency');
     } catch (error) {
       console.error('[BlobsDB] Failed to initialize store:', error);
       this.store = null;
