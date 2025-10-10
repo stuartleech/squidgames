@@ -119,13 +119,14 @@ export async function initializeSampleData() {
 
     // Create sample games
     console.log('Creating sample games for Saturday, October 11th, 2025...');
-    for (const [index, game] of sampleGames.entries()) {
+    for (let i = 0; i < sampleGames.length; i++) {
       try {
-        console.log(`Creating game ${index + 1}:`, game);
+        const game = sampleGames[i];
+        console.log(`Creating game ${i + 1}:`, game);
         const result = await dbOperations.createGame(game);
-        console.log(`Game ${index + 1} created:`, result);
+        console.log(`Game ${i + 1} created:`, result);
       } catch (error) {
-        console.error(`Error creating game ${index + 1}:`, error);
+        console.error(`Error creating game ${i + 1}:`, error);
       }
     }
 
