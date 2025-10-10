@@ -1,4 +1,4 @@
-[[build]]
+[build]
   command = "npm run build"
   publish = ".next"
 
@@ -7,12 +7,3 @@
 
 [build.environment]
   NODE_VERSION = "18"
-
-# Netlify Functions configuration
-[functions]
-  node_bundler = "esbuild"
-
-# Netlify Blobs is automatically available, no extra config needed
-# Just ensure your environment has:
-# - NETLIFY_SITE_ID (auto-provided by Netlify)
-# - NETLIFY_ACCESS_TOKEN or NETLIFY_TOKEN (auto-provided by Netlify)
