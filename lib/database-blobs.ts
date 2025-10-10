@@ -4,20 +4,15 @@ import { Team, Game, Tournament, Rules } from '@/types';
 // Netlify Blobs-based persistent database
 class BlobsDatabase {
   private store: any;
-  private siteId: string;
-  private token: string;
 
   constructor() {
-    // Initialize store with environment variables
-    this.siteId = process.env.NETLIFY_SITE_ID || '';
-    this.token = process.env.NETLIFY_TOKEN || process.env.NETLIFY_ACCESS_TOKEN || '';
-    
-    if (this.siteId && this.token) {
-      this.store = getStore({
-        name: 'squidgames-db',
-        siteID: this.siteId,
-        token: this.token,
-      });
+    // Initialize store - Netlify automatically provides credentials in serverless functions
+    try {
+      this.store = getStore('squidgames-db');
+      console.log('[BlobsDB] Store initialized successfully');
+    } catch (error) {
+      console.error('[BlobsDB] Failed to initialize store:', error);
+      this.store = null;
     }
   }
 
