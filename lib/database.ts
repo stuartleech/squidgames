@@ -24,10 +24,10 @@ console.log('[Database] Environment detection:', {
 let dbOperations: any;
 
 if (isNetlify) {
-  // Use file-based database for Netlify (reads/writes to data/tournament-data.json)
-  console.log('[Database] Loading File-based database for Netlify');
-  const { dbOperations: fileOps } = require('./database-file');
-  dbOperations = fileOps;
+  // Use Turso (hosted SQLite) for Netlify - fully persistent cloud database
+  console.log('[Database] Loading Turso database for Netlify');
+  const { dbOperations: tursoOps } = require('./database-turso');
+  dbOperations = tursoOps;
 } else if (isVercel) {
   // Use in-memory database for Vercel (or configure Vercel Postgres)
   console.log('[Database] Loading Vercel in-memory database');
