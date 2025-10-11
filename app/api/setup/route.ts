@@ -33,7 +33,7 @@ export async function GET() {
       homeTeamId: 1, awayTeamId: 2,
       scheduledTime: new Date('2025-10-11T10:00:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
-      half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Solent Red Storm'
+      half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Kent Exiles'
     });
     console.log('[SETUP] Game 1 created:', g1);
     
@@ -65,7 +65,7 @@ export async function GET() {
       homeTeamId: 2, awayTeamId: 3,
       scheduledTime: new Date('2025-10-11T13:00:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
-      half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Margate Krakens (neutral)'
+      half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Solent Red Storm'
     });
     console.log('[SETUP] Game 5 created:', g5);
     
@@ -73,7 +73,7 @@ export async function GET() {
       homeTeamId: 1, awayTeamId: 4,
       scheduledTime: new Date('2025-10-11T13:40:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
-      half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Exiles Black'
+      half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Kent Exiles'
     });
     console.log('[SETUP] Game 6 created:', g6);
     
