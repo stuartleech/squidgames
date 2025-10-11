@@ -1,0 +1,150 @@
+{
+  "teams": [
+    {
+      "id": 1,
+      "name": "Margate Krakens",
+      "color": "linear-gradient(45deg, #f9c413 50%, #d80e61 50%)",
+      "wins": 0,
+      "losses": 0,
+      "pointsFor": 0,
+      "pointsAgainst": 0
+    },
+    {
+      "id": 2,
+      "name": "Exiles Black",
+      "color": "#000000",
+      "wins": 0,
+      "losses": 0,
+      "pointsFor": 0,
+      "pointsAgainst": 0
+    },
+    {
+      "id": 3,
+      "name": "Exiles Silver",
+      "color": "#c0c0c0",
+      "wins": 0,
+      "losses": 0,
+      "pointsFor": 0,
+      "pointsAgainst": 0
+    },
+    {
+      "id": 4,
+      "name": "Solent Red Storm",
+      "color": "#dc2626",
+      "wins": 0,
+      "losses": 0,
+      "pointsFor": 0,
+      "pointsAgainst": 0
+    }
+  ],
+  "games": [
+    {
+      "id": 1,
+      "homeTeamId": 1,
+      "awayTeamId": 2,
+      "scheduledTime": "2025-10-11T09:00:00.000Z",
+      "field": "1",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "half": 1,
+      "timeRemaining": 900,
+      "isTimerRunning": false,
+      "referee": "Kent Exiles"
+    },
+    {
+      "id": 2,
+      "homeTeamId": 4,
+      "awayTeamId": 3,
+      "scheduledTime": "2025-10-11T09:40:00.000Z",
+      "field": "1",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "half": 1,
+      "timeRemaining": 900,
+      "isTimerRunning": false,
+      "referee": "Margate Krakens"
+    },
+    {
+      "id": 3,
+      "homeTeamId": 1,
+      "awayTeamId": 3,
+      "scheduledTime": "2025-10-11T10:30:00.000Z",
+      "field": "1",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "half": 1,
+      "timeRemaining": 900,
+      "isTimerRunning": false,
+      "referee": "Solent Red Storm"
+    },
+    {
+      "id": 4,
+      "homeTeamId": 2,
+      "awayTeamId": 4,
+      "scheduledTime": "2025-10-11T11:10:00.000Z",
+      "field": "1",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "half": 1,
+      "timeRemaining": 900,
+      "isTimerRunning": false,
+      "referee": "Margate Krakens"
+    },
+    {
+      "id": 5,
+      "homeTeamId": 2,
+      "awayTeamId": 3,
+      "scheduledTime": "2025-10-11T12:00:00.000Z",
+      "field": "1",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "half": 1,
+      "timeRemaining": 900,
+      "isTimerRunning": false,
+      "referee": "Solent Red Storm"
+    },
+    {
+      "id": 6,
+      "homeTeamId": 1,
+      "awayTeamId": 4,
+      "scheduledTime": "2025-10-11T12:40:00.000Z",
+      "field": "1",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "half": 1,
+      "timeRemaining": 900,
+      "isTimerRunning": false,
+      "referee": "Kent Exiles"
+    }
+  ],
+  "rules": [
+    {
+      "id": 1,
+      "title": "Throw Off Rules",
+      "content": "At the start of each half, the team who starts with the ball has the opportunity to return a **3-on-1 throw off situation** which involves one returner in the Endzone of his own half and three members of the defending team who must line up as follows;\n\n**Thrower:** Lines up at Halfway and cannot move until the returner catches the ball, he can then proceed to join his other team mates in trying to tackle the returner.\n\n**Two members of the defending team:** Must line up on their own goal line but as soon as the ball is thrown they can chase down the returner.\n\n**Important:** The ball must go further than 10 yards on the throw off and if the ball goes out of bounds without touching the returning player, the returning team will start their drive 1 yard from the halfway line.\n\nWherever the runner finishes the play (tackled / out of bounds) is where the offence starts their drive on the ensuing play. Any of the standard flag football penalties apply during this play.",
+      "section": "throw-off",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "title": "Special Plays",
+      "content": "**QB RUN:** Any team can run their QB directly from snap **ONCE per half** and this will be noted on the Scoresheet by the Refereeing Team.\n\n**BULLET BLITZ:** Any team can blitz from anywhere **ONCE per half** and this will be noted on the Scoresheet by the Refereeing Team.",
+      "section": "special-plays",
+      "order": 2
+    },
+    {
+      "id": 3,
+      "title": "General Notes",
+      "content": "• All standard flag football rules apply\n• Referees will track special plays (QB RUN and BULLET BLITZ) on the scoresheet\n• Teams are limited to one QB RUN and one BULLET BLITZ per half\n• Penalties during throw off situations follow standard flag football penalty rules",
+      "section": "general-notes",
+      "order": 3
+    }
+  ]
+}
+

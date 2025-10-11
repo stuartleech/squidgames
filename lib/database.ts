@@ -24,10 +24,10 @@ console.log('[Database] Environment detection:', {
 let dbOperations: any;
 
 if (isNetlify) {
-  // Use Netlify Blobs for persistent storage on Netlify
-  console.log('[Database] Loading Netlify Blobs database');
-  const { dbOperations: blobsOps } = require('./database-blobs');
-  dbOperations = blobsOps;
+  // Use file-based database for Netlify (reads/writes to data/tournament-data.json)
+  console.log('[Database] Loading File-based database for Netlify');
+  const { dbOperations: fileOps } = require('./database-file');
+  dbOperations = fileOps;
 } else if (isVercel) {
   // Use in-memory database for Vercel (or configure Vercel Postgres)
   console.log('[Database] Loading Vercel in-memory database');
