@@ -48,69 +48,35 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       }
     }
 
-    // If scores are provided and game is completed, update team statistics FIRST
-    if (homeScore !== undefined && awayScore !== undefined && status === 'completed') {
-      console.log(`[Standings Update] Processing game ${gameId}: ${homeScore}-${awayScore}, status: ${status}`);
+    // If game is being marked as completed, update team statistics FIRST
+    if (status === 'completed' && gameBeforeUpdate.status !== 'completed') {
+      // First time completing - use the final scores
+      const finalHomeScore = homeScore !== undefined ? homeScore : (gameBeforeUpdate.homeScore || 0);
+      const finalAwayScore = awayScore !== undefined ? awayScore : (gameBeforeUpdate.awayScore || 0);
+      
+      console.log(`[Standings Update] First completion of game ${gameId}: ${finalHomeScore}-${finalAwayScore}`);
       const homeTeam = await dbOperations.getTeamById(gameBeforeUpdate.homeTeamId);
       const awayTeam = await dbOperations.getTeamById(gameBeforeUpdate.awayTeamId);
 
       if (homeTeam && awayTeam) {
-        // Get previous scores (or 0 if null)
-        const prevHomeScore = gameBeforeUpdate.homeScore || 0;
-        const prevAwayScore = gameBeforeUpdate.awayScore || 0;
-        
-        // Calculate the difference in scores
-        const homeScoreDiff = homeScore - prevHomeScore;
-        const awayScoreDiff = awayScore - prevAwayScore;
+        // Add the scores to team totals (first time completion)
+        const newHomePointsFor = homeTeam.pointsFor + finalHomeScore;
+        const newHomePointsAgainst = homeTeam.pointsAgainst + finalAwayScore;
+        const newAwayPointsFor = awayTeam.pointsFor + finalAwayScore;
+        const newAwayPointsAgainst = awayTeam.pointsAgainst + finalHomeScore;
 
-        // Check if this was previously completed (to avoid double-counting wins/losses)
-        const wasPreviouslyCompleted = gameBeforeUpdate.status === 'completed';
-
-        // Update points for/against with the difference
-        const newHomePointsFor = homeTeam.pointsFor + homeScoreDiff;
-        const newHomePointsAgainst = homeTeam.pointsAgainst + awayScoreDiff;
-        const newAwayPointsFor = awayTeam.pointsFor + awayScoreDiff;
-        const newAwayPointsAgainst = awayTeam.pointsAgainst + homeScoreDiff;
-
-        // Calculate wins/losses
+        // Calculate wins/losses (first time completion only)
         let newHomeWins = homeTeam.wins;
         let newHomeLosses = homeTeam.losses;
         let newAwayWins = awayTeam.wins;
         let newAwayLosses = awayTeam.losses;
 
-        if (!wasPreviouslyCompleted) {
-          // Only update wins/losses if game wasn't previously completed
-          if (homeScore > awayScore) {
-            newHomeWins += 1;
-            newAwayLosses += 1;
-          } else if (awayScore > homeScore) {
-            newAwayWins += 1;
-            newHomeLosses += 1;
-          }
-        } else {
-          // Game was already completed, check if winner changed
-          const prevHomeWon = prevHomeScore > prevAwayScore;
-          const prevAwayWon = prevAwayScore > prevHomeScore;
-          const newHomeWon = homeScore > awayScore;
-          const newAwayWon = awayScore > homeScore;
-
-          // Reverse previous result
-          if (prevHomeWon && !newHomeWon) {
-            newHomeWins -= 1;
-            newAwayLosses -= 1;
-          } else if (prevAwayWon && !newAwayWon) {
-            newAwayWins -= 1;
-            newHomeLosses -= 1;
-          }
-
-          // Apply new result
-          if (newHomeWon) {
-            newHomeWins += 1;
-            newAwayLosses += 1;
-          } else if (newAwayWon) {
-            newAwayWins += 1;
-            newHomeLosses += 1;
-          }
+        if (finalHomeScore > finalAwayScore) {
+          newHomeWins += 1;
+          newAwayLosses += 1;
+        } else if (finalAwayScore > finalHomeScore) {
+          newAwayWins += 1;
+          newHomeLosses += 1;
         }
 
         // Update home team
