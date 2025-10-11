@@ -42,6 +42,9 @@ class BlobsDatabase {
       }
       await this.store.setJSON(key, value);
       console.log(`[BlobsDB] Wrote ${key}:`, Array.isArray(value) ? `${value.length} items` : 'object');
+      
+      // Add a small delay to ensure write is committed (strong consistency should handle this, but just in case)
+      await new Promise(resolve => setTimeout(resolve, 100));
     } catch (error) {
       console.error(`[BlobsDB] Error writing ${key}:`, error);
     }
