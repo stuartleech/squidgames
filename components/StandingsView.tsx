@@ -62,7 +62,7 @@ export default function StandingsView() {
   const calculateStandings = (): StandingsTeam[] => {
     return teams.map(team => ({
       ...team,
-      points: team.wins * 2 + (team.losses === 0 && team.wins > 0 ? 1 : 0), // 2 points for win, 1 bonus for undefeated
+      points: team.wins * 2, // 2 points for win
       gamesPlayed: team.wins + team.losses,
       pointDifferential: team.pointsFor - team.pointsAgainst,
     })).sort((a, b) => {
