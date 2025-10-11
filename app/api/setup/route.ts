@@ -22,15 +22,25 @@ export async function GET() {
     const t4 = await dbOperations.createTeam({ name: 'Solent Red Storm', color: '#dc2626', wins: 0, losses: 0, pointsFor: 0, pointsAgainst: 0 });
     console.log('[SETUP] Team 4 created:', t4);
     
-    // Verify teams
+    // Verify teams and get their IDs
     const teams = await dbOperations.getAllTeams();
-    console.log('[SETUP] Teams in DB:', teams.length);
+    console.log('[SETUP] Teams in DB:', teams.length, 'IDs:', teams.map((t: any) => t.id));
+    
+    // Find team IDs by name
+    const krakens = teams.find((t: any) => t.name === 'Margate Krakens');
+    const exilesBlack = teams.find((t: any) => t.name === 'Exiles Black');
+    const exilesSilver = teams.find((t: any) => t.name === 'Exiles Silver');
+    const solent = teams.find((t: any) => t.name === 'Solent Red Storm');
+    
+    if (!krakens || !exilesBlack || !exilesSilver || !solent) {
+      throw new Error('Missing teams! Found: ' + teams.map((t: any) => t.name).join(', '));
+    }
     
     // Create games
     console.log('[SETUP] Step 2: Creating games...');
     
     const g1 = await dbOperations.createGame({
-      homeTeamId: 1, awayTeamId: 2,
+      homeTeamId: krakens.id, awayTeamId: exilesBlack.id,
       scheduledTime: new Date('2025-10-11T10:00:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
       half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Kent Exiles'
@@ -38,7 +48,7 @@ export async function GET() {
     console.log('[SETUP] Game 1 created:', g1);
     
     const g2 = await dbOperations.createGame({
-      homeTeamId: 4, awayTeamId: 3,
+      homeTeamId: solent.id, awayTeamId: exilesSilver.id,
       scheduledTime: new Date('2025-10-11T10:40:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
       half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Margate Krakens'
@@ -46,7 +56,7 @@ export async function GET() {
     console.log('[SETUP] Game 2 created:', g2);
     
     const g3 = await dbOperations.createGame({
-      homeTeamId: 1, awayTeamId: 3,
+      homeTeamId: krakens.id, awayTeamId: exilesSilver.id,
       scheduledTime: new Date('2025-10-11T11:30:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
       half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Solent Red Storm'
@@ -54,7 +64,7 @@ export async function GET() {
     console.log('[SETUP] Game 3 created:', g3);
     
     const g4 = await dbOperations.createGame({
-      homeTeamId: 2, awayTeamId: 4,
+      homeTeamId: exilesBlack.id, awayTeamId: solent.id,
       scheduledTime: new Date('2025-10-11T12:10:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
       half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Margate Krakens'
@@ -62,7 +72,7 @@ export async function GET() {
     console.log('[SETUP] Game 4 created:', g4);
     
     const g5 = await dbOperations.createGame({
-      homeTeamId: 2, awayTeamId: 3,
+      homeTeamId: exilesBlack.id, awayTeamId: exilesSilver.id,
       scheduledTime: new Date('2025-10-11T13:00:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
       half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Solent Red Storm'
@@ -70,7 +80,7 @@ export async function GET() {
     console.log('[SETUP] Game 5 created:', g5);
     
     const g6 = await dbOperations.createGame({
-      homeTeamId: 1, awayTeamId: 4,
+      homeTeamId: krakens.id, awayTeamId: solent.id,
       scheduledTime: new Date('2025-10-11T13:40:00+01:00').toISOString(),
       field: '1', status: 'scheduled', homeScore: null, awayScore: null,
       half: 1, timeRemaining: 900, isTimerRunning: false, referee: 'Kent Exiles'
